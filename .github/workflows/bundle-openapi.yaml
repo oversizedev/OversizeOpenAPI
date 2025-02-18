@@ -133,22 +133,6 @@ jobs:
         id: check-changes
         run: |
           cd ${{ github.workspace }}/OversizeAPI
-          git add -N Sources/App/openapi.yaml
-          git diff --exit-code --quiet Sources/App/openapi.yaml || echo "changes_detected=true" >> $GITHUB_OUTPUT
-          echo "Changes detected: ${{ steps.check-changes.outputs.changes_detected }}"
-
-      - name: Commit and Push
-        if: steps.check-changes.outputs.changes_detected == 'true'
-        run: |
-          cd ${{ github.workspace }}/OversizeAPI
-          git add Sources/App/openapi.yaml
-          git commit -m "chore: Update API spec from ${{ github.repository }}"
-          git push origin update/api-${{ needs.bundle.outputs.timestamp }}
-
-      - name: Check Changes
-        id: check-changes
-        run: |
-          cd ${{ github.workspace }}/OversizeAPI
           # Явная проверка существования файла в целевой ветке
           if ! git ls-tree --name-only -r origin/main | grep -q "Sources/App/openapi.yaml"; then
             echo "changes_detected=true" >> $GITHUB_OUTPUT
@@ -158,6 +142,14 @@ jobs:
               echo "changes_detected=true" >> $GITHUB_OUTPUT
             fi
           fi
+
+      - name: Commit and Push
+        if: steps.check-changes.outputs.changes_detected == 'true'
+        run: |
+          cd ${{ github.workspace }}/OversizeAPI
+          git add Sources/App/openapi.yaml
+          git commit -m "chore: Update API spec from ${{ github.repository }}"
+          git push origin update/api-${{ needs.bundle.outputs.timestamp }}
       
       - name: Create PR
         if: steps.check-changes.outputs.changes_detected == 'true'

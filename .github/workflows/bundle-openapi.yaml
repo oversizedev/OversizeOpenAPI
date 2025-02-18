@@ -102,76 +102,61 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    
+      pull-requests: write
+  
     steps:
       - name: Download bundle artifact
         uses: actions/download-artifact@v4
         with:
           name: bundle
           path: bundle
-
-      - name: Install SSH client
-        run: sudo apt-get install -y openssh-client
-
-      - name: Add SSH key
-        uses: webfactory/ssh-agent@v0.9.0
+  
+      - name: Checkout OversizeAPI
+        uses: actions/checkout@v4
         with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-
-      - name: Add GitHub SSH key to known_hosts
+          repository: oversizedev/OversizeAPI
+          token: ${{ secrets.ACTIONS_TOKEN }}
+          path: OversizeAPI
+  
+      - name: Create New Branch
         run: |
-          mkdir -p ~/.ssh
-          ssh-keyscan -H github.com >> ~/.ssh/known_hosts
-
-      - name: Clone OversizeAPI
+          cd OversizeAPI
+          git checkout -b update-openapi-${{ needs.bundle.outputs.timestamp }}
+  
+      - name: Copy OpenAPI Spec
         run: |
-          # Test SSH connection
-          ssh -T git@github.com || true
-          # Clone repository
-          git clone git@github.com:oversizedev/OversizeAPI.git
-
-      - name: Create Branch and Update OpenAPI Spec
-        run: |
-          # Configure git
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          
-          # Copy and commit changes
           cp bundle/openapi.yaml OversizeAPI/Sources/App/openapi.yaml
           cd OversizeAPI
-          branch_name="update-openapi-spec-${{ needs.bundle.outputs.timestamp }}"
-          git checkout -b $branch_name
+          git status
+  
+      - name: Commit Changes
+        run: |
+          cd OversizeAPI
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add Sources/App/openapi.yaml
-          git commit -m "chore: update OpenAPI specification"
-          
-          # Push changes
-          git push origin $branch_name
-          echo "BRANCH_NAME=$branch_name" >> $GITHUB_ENV
-
+          git commit -m "chore: update OpenAPI specification from $GITHUB_REPOSITORY"
+  
+      - name: Push Changes
+        run: |
+          cd OversizeAPI
+          git push origin HEAD:update-openapi-${{ needs.bundle.outputs.timestamp }} \
+            -f \
+            --set-upstream origin update-openapi-${{ needs.bundle.outputs.timestamp }}
+  
       - name: Create Pull Request
-        uses: actions/github-script@v7
+        uses: peter-evans/create-pull-request@v5
         with:
-          github-token: ${{ secrets.ACTIONS_TOKEN }}
-          script: |
-            const result = await github.rest.pulls.create({
-              owner: 'oversizedev',
-              repo: 'OversizeAPI',
-              title: 'chore: update OpenAPI specification',
-              body: `Automated OpenAPI specification update
-
-              - Updated by: ${{ github.actor }}
-              - Updated on: ${new Date().toISOString().replace('T', ' ').split('.')[0]}
-              - Source: ${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}
-              - Documentation: ${process.env.PAGES_URL}
-              
-              This PR was automatically created by GitHub Actions.`,
-              head: process.env.BRANCH_NAME,
-              base: 'main'
-            });
+          token: ${{ secrets.ACTIONS_TOKEN }}
+          repository: oversizedev/OversizeAPI
+          path: OversizeAPI
+          branch: update-openapi-${{ needs.bundle.outputs.timestamp }}
+          title: "chore: update OpenAPI specification"
+          body: |
+            Automated update from ${{ github.repository }} (${{ github.sha }})
             
-            await github.rest.issues.addLabels({
-              owner: 'oversizedev',
-              repo: 'OversizeAPI',
-              issue_number: result.data.number,
-              labels: ['automated-pr', 'documentation']
-            });
+            - Source: ${{ github.server_url }}/${{ github.repository }}
+            - Documentation: ${{ needs.deploy-pages.outputs.page_url }}
+          labels: automated-pr,documentation
+          delete-branch: true
+  

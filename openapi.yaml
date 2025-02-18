@@ -27,3 +27,6 @@ components:
 paths:
   /v1/app/{id}/features:
     $ref: './paths/AppFeatures.yaml'
+
+  /v1/feature/{id}:
+    $ref: './paths/AppFeaturePath.yaml'

@@ -33,15 +33,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
-
-      - name: Cache dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
 
       - name: Install Redocly CLI
         run: npm install -g @redocly/cli
@@ -127,7 +118,6 @@ jobs:
         with:
           github-token: ${{ secrets.ACTIONS_TOKEN }}
           script: |
-            const currentDate = new Date().toISOString().replace('T', ' ').substring(0, 19);
             const result = await github.rest.pulls.create({
               owner: 'oversizedev',
               repo: 'OversizeAPI',
@@ -135,10 +125,10 @@ jobs:
               body: `Automated OpenAPI specification update
 
               - Updated by: ${{ github.actor }}
-              - Updated on: ${currentDate}
+              - Updated on: ${new Date().toISOString().split('T')[0]} ${new Date().toISOString().split('T')[1].split('.')[0]}
               - Source: ${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}
               - Documentation: ${process.env.PAGES_URL}
-              
+            
               This PR was automatically created by GitHub Actions.`,
               head: process.env.BRANCH_NAME,
               base: 'main'

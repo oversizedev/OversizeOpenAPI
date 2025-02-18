@@ -150,7 +150,7 @@ jobs:
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.ACTIONS_TOKEN }}
-          repository: oversizedev/OversizeAPI
+          path: OversizeAPI
           base: main
           branch: update-openapi-${{ needs.bundle.outputs.timestamp }}
           title: "chore: update OpenAPI specification"

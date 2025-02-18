@@ -1,0 +1,124 @@
+openapi: 3.1.0
+info:
+  title: OversizeAPI
+  version: 1.0.0
+  description: API specification for Oversize application features
+  contact:
+    name: Oversize Team
+    url: 'https://oversize.app'
+servers:
+  - url: 'https://api.oversize.app'
+    description: API url
+paths:
+  '/v1/app/{id}/features':
+    get:
+      operationId: getAppFeatures
+      summary: Retrieve application features
+      description: Get all features associated with a specific application
+      parameters:
+        - name: id
+          required: true
+          in: path
+          description: The application id used in the returned features
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: A success response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  AppFeature:
+                    type: object
+                    required:
+                      - id
+                      - title
+                      - textAlignment
+                      - textSize
+                    properties:
+                      id:
+                        type: integer
+                        description: 'Computed identifier from image, title, and subtitle'
+                        readOnly: true
+                      title:
+                        type: string
+                        description: Title of the store feature
+                        example: Smart Weather Detection
+                      subtitle:
+                        type: string
+                        description: Subtitle of the store feature
+                        example: Real-time weather updates
+                      description:
+                        type: string
+                        example: Get instant notifications about weather changes
+                      textSize:
+                        type: string
+                        enum:
+                          - small
+                          - medium
+                          - large
+                        example: medium
+                        description: Size of the text content
+                      textAlignment:
+                        type: string
+                        enum:
+                          - leading
+                          - center
+                          - trailing
+                        example: center
+                        description: Alignment of the text content
+                      iconUrl:
+                        type: string
+                        format: url
+                        example: 'https://cdn.oversize.design/assets/apps/dressweather/features/2.png'
+                        description: URL for the feature icon
+                      screenshotUrl:
+                        type: string
+                        format: url
+                        example: 'https://cdn.oversize.design/assets/apps/dressweather/screenshots/1.png'
+                        description: URL for the feature screenshot
+                      screenshotAlignment:
+                        type: string
+                        enum:
+                          - top
+                          - bottom
+                        example: top
+                        description: Vertical alignment of the screenshot
+                      backgroundColor:
+                        type: string
+                        example: ffffff
+                        description: Background color value in hex format without
+                    example:
+                      id: 1
+                      title: Smart Weather Detection
+                      subtitle: Real-time weather updates
+                      description: Get instant notifications about weather changes
+                      textSize: medium
+                      textAlignment: center
+                      iconUrl: 'https://cdn.oversize.design/assets/apps/dressweather/features/2.png'
+                      screenshotUrl: 'https://cdn.oversize.design/assets/apps/dressweather/screenshots/1.png'
+                      screenshotAlignment: top
+                      backgroundColor: ffffff
+        '404':
+          description: Application not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Application not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error

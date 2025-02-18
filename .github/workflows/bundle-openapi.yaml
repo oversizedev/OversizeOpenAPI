@@ -110,37 +110,42 @@ jobs:
           name: bundle
           path: bundle
 
-      - name: Setup SSH
+      - name: Install SSH client
+        run: sudo apt-get install -y openssh-client
+
+      - name: Add SSH key
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Add GitHub SSH key to known_hosts
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          echo "github.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl" > ~/.ssh/known_hosts
-          eval "$(ssh-agent -s)"
-          ssh-add ~/.ssh/id_rsa
+          ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+
+      - name: Clone OversizeAPI
+        run: |
           # Test SSH connection
           ssh -T git@github.com || true
-
-      - name: Checkout OversizeAPI
-        uses: actions/checkout@v4
-        with:
-          repository: oversizedev/OversizeAPI
-          path: OversizeAPI
-          fetch-depth: 1
-          token: ${{ secrets.ACTIONS_TOKEN }}
+          # Clone repository
+          git clone git@github.com:oversizedev/OversizeAPI.git
 
       - name: Create Branch and Update OpenAPI Spec
         run: |
+          # Configure git
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          
+          # Copy and commit changes
           cp bundle/openapi.yaml OversizeAPI/Sources/App/openapi.yaml
           cd OversizeAPI
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           branch_name="update-openapi-spec-${{ needs.bundle.outputs.timestamp }}"
           git checkout -b $branch_name
           git add Sources/App/openapi.yaml
           git commit -m "chore: update OpenAPI specification"
-          git remote set-url origin git@github.com:oversizedev/OversizeAPI.git
-          GIT_SSH_COMMAND='ssh -i ~/.ssh/id_rsa -o IdentitiesOnly=yes' git push origin $branch_name
+          
+          # Push changes
+          git push origin $branch_name
           echo "BRANCH_NAME=$branch_name" >> $GITHUB_ENV
 
       - name: Create Pull Request

@@ -4,32 +4,149 @@ on:
   push:
     branches:
       - main
+    paths:
+      - '**.yaml'
+      - '**.yml'
   pull_request:
+    paths:
+      - '**.yaml'
+      - '**.yml'
+  workflow_dispatch:  # Allow manual trigger
 
 jobs:
   bundle_openapi:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Install Swagger CLI
-        run: npm install -g swagger-cli
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install Redocly CLI
+        run: npm install -g @redocly/cli
 
       - name: Bundle OpenAPI Spec
-        run: swagger-cli bundle openapi.yaml -o bundle/openapi.yaml --type yaml
+        run: |
+          mkdir -p bundle
+          redocly bundle openapi.yaml --output bundle/openapi.yaml
+
+      - name: Validate OpenAPI Spec
+        run: redocly lint bundle/openapi.yaml
+
+      - name: Generate Documentation
+        run: |
+          redocly build-docs bundle/openapi.yaml -o bundle/index.html
 
       - name: Upload Bundled Spec as Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: openapi.yaml
+          name: openapi-spec
           path: bundle/openapi.yaml
+          retention-days: 30
 
-      - name: Commit and Push Updated Spec
+      - name: Setup Pages
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/configure-pages@v4
+
+      - name: Upload Pages artifact
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: bundle
+
+      - name: Deploy to GitHub Pages
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: Commit and Push Changes
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
-          git config --global user.name "github-actions"
-          git config --global user.email "github-actions@github.com"
-          git add bundle/openapi.yaml          # Changed from dist/openapi.yaml to bundle/openapi.yaml
-          git commit -m "Automated OpenAPI bundle update" || echo "No changes to commit"
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add bundle/openapi.yaml bundle/index.html
+          git commit -m "chore: update bundled OpenAPI specification [skip ci]" || echo "No changes to commit"
           git push || echo "No changes to push"
+
+      - name: Get current timestamp
+        id: timestamp
+        run: echo "timestamp=$(date +'%Y%m%d-%H%M%S')" >> $GITHUB_OUTPUT
+
+      - name: Setup SSH
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Checkout OversizeAPI
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/checkout@v4
+        with:
+          repository: oversizedev/OversizeAPI
+          path: OversizeAPI
+          ssh-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Create Branch and Update OpenAPI Spec
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          cp bundle/openapi.yaml OversizeAPI/Sources/App/openapi.yaml
+          cd OversizeAPI
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          branch_name="update-openapi-spec-${{ steps.timestamp.outputs.timestamp }}"
+          git checkout -b $branch_name
+          git add Sources/App/openapi.yaml
+          git commit -m "chore: update OpenAPI specification"
+          git push origin $branch_name
+          echo "BRANCH_NAME=$branch_name" >> $GITHUB_ENV
+
+      - name: Create Pull Request (OversizeAPI)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.ACTIONS_TOKEN }}
+          script: |
+            const currentDate = new Date().toISOString().replace('T', ' ').substring(0, 19);
+            const result = await github.rest.pulls.create({
+              owner: 'oversizedev',
+              repo: 'OversizeAPI',
+              title: 'chore: update OpenAPI specification',
+              body: `Automated OpenAPI specification update
+
+              - Updated by: ${{ github.actor }}
+              - Updated on: ${currentDate}
+              - Source: ${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}
+              - Documentation: ${process.env.PAGES_URL}
+              
+              This PR was automatically created by GitHub Actions.`,
+              head: process.env.BRANCH_NAME,
+              base: 'main'
+            });
+            
+            await github.rest.issues.addLabels({
+              owner: 'oversizedev',
+              repo: 'OversizeAPI',
+              issue_number: result.data.number,
+              labels: ['automated-pr', 'documentation']
+            });

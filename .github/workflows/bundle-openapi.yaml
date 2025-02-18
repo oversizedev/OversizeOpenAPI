@@ -109,48 +109,54 @@ jobs:
           git config user.name "API Updater Bot"
           git config user.email "actions@users.noreply.github.com"
 
+      - name: Sync with Origin
+        run: |
+          cd ${{ github.workspace }}/OversizeAPI
+          git fetch origin
+          git reset --hard origin/main
+          git clean -fd
+
       - name: Create Branch
         run: |
           cd ${{ github.workspace }}/OversizeAPI
           git checkout -b update/api-${{ needs.bundle.outputs.timestamp }}
 
+      - name: Validate Target Repo
+        run: |
+          cd ${{ github.workspace }}/OversizeAPI
+          echo "Current branch: $(git branch --show-current)"
+          git status
+
       - name: Copy Files
         run: |
           mkdir -p ${{ github.workspace }}/OversizeAPI/Sources/App
-          cp ${{ github.workspace }}/artifacts/openapi.yaml ${{ github.workspace }}/OversizeAPI/Sources/App/openapi.yaml
-          echo "Copied files structure:"
-          ls -la ${{ github.workspace }}/OversizeAPI/Sources/App/
-
-      - name: Debug Target Repo
-        run: |
-          echo "Current workspace: $GITHUB_WORKSPACE"
-          echo "OversizeAPI contents:"
-          ls -la ${{ github.workspace }}/OversizeAPI/Sources/App/
-          echo "Artifacts contents:"
-          ls -la ${{ github.workspace }}/artifacts
+          cp -v ${{ github.workspace }}/artifacts/openapi.yaml ${{ github.workspace }}/OversizeAPI/Sources/App/openapi.yaml
+          echo "File verification:"
+          ls -l ${{ github.workspace }}/OversizeAPI/Sources/App/openapi.yaml
+          md5sum ${{ github.workspace }}/OversizeAPI/Sources/App/openapi.yaml
 
       - name: Check Changes
         id: check-changes
         run: |
           cd ${{ github.workspace }}/OversizeAPI
-          # Явная проверка существования файла в целевой ветке
-          if ! git ls-tree --name-only -r origin/main | grep -q "Sources/App/openapi.yaml"; then
+          git add -A
+          
+          if ! git diff --exit-code --quiet origin/main -- Sources/App/openapi.yaml; then
             echo "changes_detected=true" >> $GITHUB_OUTPUT
+            echo "Changes found:"
+            git diff origin/main -- Sources/App/openapi.yaml
           else
-            # Сравнение содержимого файлов
-            if ! diff -q Sources/App/openapi.yaml ${{ github.workspace }}/artifacts/openapi.yaml; then
-              echo "changes_detected=true" >> $GITHUB_OUTPUT
-            fi
+            echo "changes_detected=false" >> $GITHUB_OUTPUT
+            echo "No changes detected"
           fi
 
-      - name: Commit and Push
+      - name: Commit Changes
         if: steps.check-changes.outputs.changes_detected == 'true'
         run: |
           cd ${{ github.workspace }}/OversizeAPI
-          git add Sources/App/openapi.yaml
-          git commit -m "chore: Update API spec from ${{ github.repository }}"
+          git commit -m "chore: Update OpenAPI specification [skip ci]"
           git push origin update/api-${{ needs.bundle.outputs.timestamp }}
-      
+
       - name: Create PR
         if: steps.check-changes.outputs.changes_detected == 'true'
         uses: peter-evans/create-pull-request@v5
@@ -159,11 +165,12 @@ jobs:
           path: ${{ github.workspace }}/OversizeAPI
           title: "API Specification Update"
           body: |
-            Automatic API update from [${{ github.repository }}](${{ github.server_url }}/${{ github.repository }})
-            **Documentation**: [${{ needs.deploy-pages.outputs.page_url }}](${{ needs.deploy-pages.outputs.page_url }})
+            Automated update from ${{ github.repository }}
+            
+            - Source: ${{ github.server_url }}/${{ github.repository }}
+            - Documentation: ${{ needs.deploy-pages.outputs.page_url }}
           labels: automated,api-update
           branch: update/api-${{ needs.bundle.outputs.timestamp }}
           base: main
-          delete-branch: false # Отключаем автоматическое удаление ветки
-          commit-message: "chore: Update OpenAPI specification"
-      
+          delete-branch: false
+          commit-message: "chore: Update OpenAPI specification [skip ci]"

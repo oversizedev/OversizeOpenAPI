@@ -1,4 +1,4 @@
-name: Bundle OpenAPI Spec
+name: API Spec CI
 
 on:
   push:
@@ -92,46 +92,55 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: api-bundle
-          path: artifacts
+          path: ${{ github.workspace }}/artifacts
 
       - name: Checkout Target Repo
         uses: actions/checkout@v4
         with:
           repository: oversizedev/OversizeAPI
           token: ${{ secrets.ACTIONS_TOKEN }}
-          path: OversizeAPI
+          path: ${{ github.workspace }}/OversizeAPI
           ref: main
           fetch-depth: 0
 
       - name: Configure Git
         run: |
-          cd OversizeAPI
+          cd ${{ github.workspace }}/OversizeAPI
           git config user.name "API Updater Bot"
           git config user.email "actions@users.noreply.github.com"
 
       - name: Create Branch
         run: |
-          cd OversizeAPI
+          cd ${{ github.workspace }}/OversizeAPI
           git checkout -b update/api-${{ needs.bundle.outputs.timestamp }}
 
       - name: Copy Files
         run: |
-          mkdir -p OversizeAPI/Sources/App
-          cp artifacts/openapi.yaml OversizeAPI/Sources/App/openapi.yaml
-          echo "Copied files:"
-          ls -la OversizeAPI/Sources/App/
+          mkdir -p ${{ github.workspace }}/OversizeAPI/Sources/App
+          cp ${{ github.workspace }}/artifacts/openapi.yaml ${{ github.workspace }}/OversizeAPI/Sources/App/openapi.yaml
+          echo "Copied files structure:"
+          ls -la ${{ github.workspace }}/OversizeAPI/Sources/App/
+
+      - name: Debug Target Repo
+        run: |
+          echo "Current workspace: $GITHUB_WORKSPACE"
+          echo "OversizeAPI contents:"
+          ls -la ${{ github.workspace }}/OversizeAPI/Sources/App/
+          echo "Artifacts contents:"
+          ls -la ${{ github.workspace }}/artifacts
 
       - name: Check Changes
         id: check-changes
         run: |
-          cd OversizeAPI
+          cd ${{ github.workspace }}/OversizeAPI
           git add -N Sources/App/openapi.yaml
           git diff --exit-code --quiet Sources/App/openapi.yaml || echo "changes_detected=true" >> $GITHUB_OUTPUT
+          echo "Changes detected: ${{ steps.check-changes.outputs.changes_detected }}"
 
       - name: Commit and Push
         if: steps.check-changes.outputs.changes_detected == 'true'
         run: |
-          cd OversizeAPI
+          cd ${{ github.workspace }}/OversizeAPI
           git add Sources/App/openapi.yaml
           git commit -m "chore: Update API spec from ${{ github.repository }}"
           git push origin update/api-${{ needs.bundle.outputs.timestamp }}
@@ -141,7 +150,7 @@ jobs:
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.ACTIONS_TOKEN }}
-          path: OversizeAPI
+          path: ${{ github.workspace }}/OversizeAPI
           title: "API Specification Update"
           body: |
             Automatic API update from [${{ github.repository }}](${{ github.server_url }}/${{ github.repository }})
@@ -151,4 +160,5 @@ jobs:
           branch: update/api-${{ needs.bundle.outputs.timestamp }}
           base: main
           delete-branch: true
+          force: true
           draft: false

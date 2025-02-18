@@ -1,0 +1,35 @@
+name: Bundle OpenAPI Spec
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  bundle_openapi:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install Swagger CLI
+        run: npm install -g swagger-cli
+
+      - name: Bundle OpenAPI Spec
+        run: swagger-cli bundle openapi.yaml -o bundle/openapi.yaml --type yaml
+
+      - name: Upload Bundled Spec as Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: openapi.yaml
+          path: bundle/openapi.yaml
+
+      - name: Commit and Push Updated Spec
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git add dist/openapi.yaml
+          git commit -m "Automated OpenAPI bundle update" || echo "No changes to commit"
+          git push || echo "No changes to push"

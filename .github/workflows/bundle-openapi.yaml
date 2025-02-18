@@ -11,20 +11,15 @@ on:
     paths:
       - '**.yaml'
       - '**.yml'
-  workflow_dispatch:  # Allow manual trigger
+  workflow_dispatch:
 
 jobs:
-  bundle_openapi:
+  bundle:
+    name: Bundle and Validate OpenAPI
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pages: write
-      id-token: write
-
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-
+    outputs:
+      timestamp: ${{ steps.timestamp.outputs.timestamp }}
+    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -49,27 +44,16 @@ jobs:
         run: |
           redocly build-docs bundle/openapi.yaml -o bundle/index.html
 
-      - name: Upload Bundled Spec as Artifact
+      - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: openapi-spec
-          path: bundle/openapi.yaml
-          retention-days: 30
+          name: bundle
+          path: bundle/
+          retention-days: 1
 
-      - name: Setup Pages
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        uses: actions/configure-pages@v4
-
-      - name: Upload Pages artifact
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: bundle
-
-      - name: Deploy to GitHub Pages
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Get current timestamp
+        id: timestamp
+        run: echo "timestamp=$(date +'%Y%m%d-%H%M%S')" >> $GITHUB_OUTPUT
 
       - name: Commit and Push Changes
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -80,18 +64,63 @@ jobs:
           git commit -m "chore: update bundled OpenAPI specification [skip ci]" || echo "No changes to commit"
           git push || echo "No changes to push"
 
-      - name: Get current timestamp
-        id: timestamp
-        run: echo "timestamp=$(date +'%Y%m%d-%H%M%S')" >> $GITHUB_OUTPUT
-
-      - name: Setup SSH
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        uses: webfactory/ssh-agent@v0.9.0
+  deploy-pages:
+    name: Deploy to GitHub Pages
+    needs: bundle
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    
+    steps:
+      - name: Download bundle artifact
+        uses: actions/download-artifact@v4
         with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          name: bundle
+          path: bundle
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: bundle
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+  create-pr:
+    name: Create PR in OversizeAPI
+    needs: bundle
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - name: Download bundle artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: bundle
+          path: bundle
+
+      - name: Setup SSH and Git
+        run: |
+          eval "$(ssh-agent -s)"
+          mkdir -p ~/.ssh
+          echo "github.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl" >> ~/.ssh/known_hosts
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/github_actions
+          chmod 600 ~/.ssh/github_actions
+          ssh-add ~/.ssh/github_actions
+          git config --global core.sshCommand 'ssh -i ~/.ssh/github_actions -o IdentitiesOnly=yes'
 
       - name: Checkout OversizeAPI
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: actions/checkout@v4
         with:
           repository: oversizedev/OversizeAPI
@@ -99,21 +128,19 @@ jobs:
           ssh-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
       - name: Create Branch and Update OpenAPI Spec
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           cp bundle/openapi.yaml OversizeAPI/Sources/App/openapi.yaml
           cd OversizeAPI
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          branch_name="update-openapi-spec-${{ steps.timestamp.outputs.timestamp }}"
+          branch_name="update-openapi-spec-${{ needs.bundle.outputs.timestamp }}"
           git checkout -b $branch_name
           git add Sources/App/openapi.yaml
           git commit -m "chore: update OpenAPI specification"
-          git push origin $branch_name
+          GIT_SSH_COMMAND='ssh -i ~/.ssh/github_actions -o IdentitiesOnly=yes' git push origin $branch_name
           echo "BRANCH_NAME=$branch_name" >> $GITHUB_ENV
 
-      - name: Create Pull Request (OversizeAPI)
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      - name: Create Pull Request
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.ACTIONS_TOKEN }}
@@ -125,10 +152,10 @@ jobs:
               body: `Automated OpenAPI specification update
 
               - Updated by: ${{ github.actor }}
-              - Updated on: ${new Date().toISOString().split('T')[0]} ${new Date().toISOString().split('T')[1].split('.')[0]}
+              - Updated on: ${new Date().toISOString().replace('T', ' ').split('.')[0]}
               - Source: ${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}
               - Documentation: ${process.env.PAGES_URL}
-            
+              
               This PR was automatically created by GitHub Actions.`,
               head: process.env.BRANCH_NAME,
               base: 'main'

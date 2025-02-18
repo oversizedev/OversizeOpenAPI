@@ -110,22 +110,24 @@ jobs:
           name: bundle
           path: bundle
 
-      - name: Setup SSH and Git
+      - name: Setup SSH
         run: |
-          eval "$(ssh-agent -s)"
           mkdir -p ~/.ssh
-          echo "github.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl" >> ~/.ssh/known_hosts
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/github_actions
-          chmod 600 ~/.ssh/github_actions
-          ssh-add ~/.ssh/github_actions
-          git config --global core.sshCommand 'ssh -i ~/.ssh/github_actions -o IdentitiesOnly=yes'
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          echo "github.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl" > ~/.ssh/known_hosts
+          eval "$(ssh-agent -s)"
+          ssh-add ~/.ssh/id_rsa
+          # Test SSH connection
+          ssh -T git@github.com || true
 
       - name: Checkout OversizeAPI
         uses: actions/checkout@v4
         with:
           repository: oversizedev/OversizeAPI
           path: OversizeAPI
-          ssh-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          fetch-depth: 1
+          token: ${{ secrets.ACTIONS_TOKEN }}
 
       - name: Create Branch and Update OpenAPI Spec
         run: |
@@ -137,7 +139,8 @@ jobs:
           git checkout -b $branch_name
           git add Sources/App/openapi.yaml
           git commit -m "chore: update OpenAPI specification"
-          GIT_SSH_COMMAND='ssh -i ~/.ssh/github_actions -o IdentitiesOnly=yes' git push origin $branch_name
+          git remote set-url origin git@github.com:oversizedev/OversizeAPI.git
+          GIT_SSH_COMMAND='ssh -i ~/.ssh/id_rsa -o IdentitiesOnly=yes' git push origin $branch_name
           echo "BRANCH_NAME=$branch_name" >> $GITHUB_ENV
 
       - name: Create Pull Request

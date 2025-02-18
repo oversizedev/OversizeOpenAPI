@@ -6,6 +6,9 @@ info:
   contact:
     name: Oversize Team
     url: https://oversize.app
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
 
 servers:
   - url: https://api.oversize.app

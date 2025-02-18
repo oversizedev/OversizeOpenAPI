@@ -1,0 +1,41 @@
+get:
+  operationId: getAppFeatures
+  summary: Retrieve application features
+  description: Get all features associated with a specific application
+  parameters:
+    - name: id
+      required: true
+      in: path
+      description: The application id used in the returned features
+      schema:
+        type: integer
+        example: 001
+  responses:
+    '200':
+      description: A success response
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '../schemas/AppFeature.yaml'
+    '404':
+      description: Application not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Application not found"
+    '500':
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Internal server error"

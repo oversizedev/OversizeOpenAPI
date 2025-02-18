@@ -145,6 +145,20 @@ jobs:
           git commit -m "chore: Update API spec from ${{ github.repository }}"
           git push origin update/api-${{ needs.bundle.outputs.timestamp }}
 
+      - name: Check Changes
+        id: check-changes
+        run: |
+          cd ${{ github.workspace }}/OversizeAPI
+          # Явная проверка существования файла в целевой ветке
+          if ! git ls-tree --name-only -r origin/main | grep -q "Sources/App/openapi.yaml"; then
+            echo "changes_detected=true" >> $GITHUB_OUTPUT
+          else
+            # Сравнение содержимого файлов
+            if ! diff -q Sources/App/openapi.yaml ${{ github.workspace }}/artifacts/openapi.yaml; then
+              echo "changes_detected=true" >> $GITHUB_OUTPUT
+            fi
+          fi
+      
       - name: Create PR
         if: steps.check-changes.outputs.changes_detected == 'true'
         uses: peter-evans/create-pull-request@v5
@@ -154,11 +168,10 @@ jobs:
           title: "API Specification Update"
           body: |
             Automatic API update from [${{ github.repository }}](${{ github.server_url }}/${{ github.repository }})
-            
             **Documentation**: [${{ needs.deploy-pages.outputs.page_url }}](${{ needs.deploy-pages.outputs.page_url }})
           labels: automated,api-update
           branch: update/api-${{ needs.bundle.outputs.timestamp }}
           base: main
-          delete-branch: true
-          force: true
-          draft: false
+          delete-branch: false # Отключаем автоматическое удаление ветки
+          commit-message: "chore: Update OpenAPI specification"
+      

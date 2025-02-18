@@ -5,16 +5,23 @@ info:
   description: API specification for Oversize application features
   contact:
     name: Oversize Team
-    url: 'https://oversize.app'
+    url: https://oversize.app
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
 servers:
-  - url: 'https://api.oversize.app'
+  - url: https://api.oversize.app
     description: API url
+security:
+  - ApiKeyAuth: []
 paths:
-  '/v1/app/{id}/features':
+  /v1/app/{id}/features:
     get:
       operationId: getAppFeatures
       summary: Retrieve application features
       description: Get all features associated with a specific application
+      security:
+        - ApiKeyAuth: []
       parameters:
         - name: id
           required: true
@@ -31,77 +38,7 @@ paths:
               schema:
                 type: array
                 items:
-                  AppFeature:
-                    type: object
-                    required:
-                      - id
-                      - title
-                      - textAlignment
-                      - textSize
-                    properties:
-                      id:
-                        type: integer
-                        description: 'Computed identifier from image, title, and subtitle'
-                        readOnly: true
-                      title:
-                        type: string
-                        description: Title of the store feature
-                        example: Smart Weather Detection
-                      subtitle:
-                        type: string
-                        description: Subtitle of the store feature
-                        example: Real-time weather updates
-                      description:
-                        type: string
-                        example: Get instant notifications about weather changes
-                      textSize:
-                        type: string
-                        enum:
-                          - small
-                          - medium
-                          - large
-                        example: medium
-                        description: Size of the text content
-                      textAlignment:
-                        type: string
-                        enum:
-                          - leading
-                          - center
-                          - trailing
-                        example: center
-                        description: Alignment of the text content
-                      iconUrl:
-                        type: string
-                        format: url
-                        example: 'https://cdn.oversize.design/assets/apps/dressweather/features/2.png'
-                        description: URL for the feature icon
-                      screenshotUrl:
-                        type: string
-                        format: url
-                        example: 'https://cdn.oversize.design/assets/apps/dressweather/screenshots/1.png'
-                        description: URL for the feature screenshot
-                      screenshotAlignment:
-                        type: string
-                        enum:
-                          - top
-                          - bottom
-                        example: top
-                        description: Vertical alignment of the screenshot
-                      backgroundColor:
-                        type: string
-                        example: ffffff
-                        description: Background color value in hex format without
-                    example:
-                      id: 1
-                      title: Smart Weather Detection
-                      subtitle: Real-time weather updates
-                      description: Get instant notifications about weather changes
-                      textSize: medium
-                      textAlignment: center
-                      iconUrl: 'https://cdn.oversize.design/assets/apps/dressweather/features/2.png'
-                      screenshotUrl: 'https://cdn.oversize.design/assets/apps/dressweather/screenshots/1.png'
-                      screenshotAlignment: top
-                      backgroundColor: ffffff
+                  $ref: '#/components/schemas/AppFeature'
         '404':
           description: Application not found
           content:
@@ -122,3 +59,70 @@ paths:
                   error:
                     type: string
                     example: Internal server error
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+  schemas:
+    AppFeature:
+      type: object
+      required:
+        - id
+        - title
+        - textAlignment
+        - textSize
+      properties:
+        id:
+          type: integer
+          description: Computed identifier from image, title, and subtitle
+          readOnly: true
+        title:
+          type: string
+          description: Title of the store feature
+          example: Smart Weather Detection
+        subtitle:
+          type: string
+          description: Subtitle of the store feature
+          example: Real-time weather updates
+        description:
+          type: string
+          example: Get instant notifications about weather changes
+        textSize:
+          type: string
+          enum:
+            - small
+            - medium
+            - large
+          example: medium
+          description: Size of the text content
+        textAlignment:
+          type: string
+          enum:
+            - leading
+            - center
+            - trailing
+          example: center
+          description: Alignment of the text content
+        iconUrl:
+          type: string
+          format: url
+          example: https://cdn.oversize.design/assets/apps/dressweather/features/2.png
+          description: URL for the feature icon
+        screenshotUrl:
+          type: string
+          format: url
+          example: https://cdn.oversize.design/assets/apps/dressweather/screenshots/1.png
+          description: URL for the feature screenshot
+        screenshotAlignment:
+          type: string
+          enum:
+            - top
+            - bottom
+          example: top
+          description: Vertical alignment of the screenshot
+        backgroundColor:
+          type: string
+          example: ffffff
+          description: Background color value in hex format without

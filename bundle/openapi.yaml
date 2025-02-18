@@ -77,7 +77,6 @@ components:
         id:
           type: integer
           description: Computed identifier from image, title, and subtitle
-          readOnly: true
         title:
           type: string
           description: Title of the store feature

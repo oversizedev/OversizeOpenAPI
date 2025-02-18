@@ -103,7 +103,7 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-  
+      
     steps:
       - name: Download bundle artifact
         uses: actions/download-artifact@v4
@@ -117,10 +117,21 @@ jobs:
           repository: oversizedev/OversizeAPI
           token: ${{ secrets.ACTIONS_TOKEN }}
           path: OversizeAPI
+          ref: main
+          fetch-depth: 0
+  
+      - name: Configure Git
+        run: |
+          cd OversizeAPI
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git remote set-head origin -a
   
       - name: Create New Branch
         run: |
           cd OversizeAPI
+          git checkout main
+          git pull origin main
           git checkout -b update-openapi-${{ needs.bundle.outputs.timestamp }}
   
       - name: Copy OpenAPI Spec
@@ -132,17 +143,13 @@ jobs:
       - name: Commit Changes
         run: |
           cd OversizeAPI
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add Sources/App/openapi.yaml
           git commit -m "chore: update OpenAPI specification from $GITHUB_REPOSITORY"
   
       - name: Push Changes
         run: |
           cd OversizeAPI
-          git push origin HEAD:update-openapi-${{ needs.bundle.outputs.timestamp }} \
-            -f \
-            --set-upstream origin update-openapi-${{ needs.bundle.outputs.timestamp }}
+          git push --set-upstream origin update-openapi-${{ needs.bundle.outputs.timestamp }}
   
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5
@@ -159,4 +166,4 @@ jobs:
             - Documentation: ${{ needs.deploy-pages.outputs.page_url }}
           labels: automated-pr,documentation
           delete-branch: true
-  
+    

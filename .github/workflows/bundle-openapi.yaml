@@ -7,10 +7,6 @@ on:
     paths:
       - '**.yaml'
       - '**.yml'
-  pull_request:
-    paths:
-      - '**.yaml'
-      - '**.yml'
   workflow_dispatch:
 
 jobs:
@@ -21,7 +17,7 @@ jobs:
       timestamp: ${{ steps.timestamp.outputs.timestamp }}
     
     steps:
-      - name: Checkout repository
+      - name: Checkout repo
         uses: actions/checkout@v4
 
       - name: Setup Node.js
@@ -40,78 +36,65 @@ jobs:
       - name: Validate OpenAPI Spec
         run: redocly lint bundle/openapi.yaml
 
-      - name: Generate Documentation
-        run: |
-          redocly build-docs bundle/openapi.yaml -o bundle/index.html
+      - name: Generate Docs
+        run: redocly build-docs bundle/openapi.yaml -o bundle/index.html
 
-      - name: Upload artifacts
+      - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: bundle
+          name: api-bundle
           path: bundle/
           retention-days: 1
 
-      - name: Get current timestamp
+      - name: Generate Timestamp
         id: timestamp
-        run: echo "timestamp=$(date +'%Y%m%d-%H%M%S')" >> $GITHUB_OUTPUT
-
-      - name: Commit and Push Changes
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add bundle/openapi.yaml bundle/index.html
-          git commit -m "chore: update bundled OpenAPI specification [skip ci]" || echo "No changes to commit"
-          git push || echo "No changes to push"
+        run: echo "timestamp=$(date -u +'%Y%m%dT%H%M%SZ')" >> $GITHUB_OUTPUT
 
   deploy-pages:
-    name: Deploy to GitHub Pages
+    name: Deploy Docs
     needs: bundle
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
       pages: write
       id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     
     steps:
-      - name: Download bundle artifact
+      - name: Download Artifacts
         uses: actions/download-artifact@v4
         with:
-          name: bundle
-          path: bundle
+          name: api-bundle
+          path: dist
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
-      - name: Upload Pages artifact
+      - name: Upload Artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: bundle
+          path: dist
 
-      - name: Deploy to GitHub Pages
+      - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4
 
   create-pr:
-    name: Create PR in OversizeAPI
-    needs: bundle
+    name: Create API PR
+    needs: [bundle, deploy-pages]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
       contents: write
       pull-requests: write
-  
+    
     steps:
-      - name: Download bundle artifact
+      - name: Download Bundle
         uses: actions/download-artifact@v4
         with:
-          name: bundle
-          path: bundle
-  
-      - name: Checkout OversizeAPI
+          name: api-bundle
+          path: artifacts
+
+      - name: Checkout Target Repo
         uses: actions/checkout@v4
         with:
           repository: oversizedev/OversizeAPI
@@ -119,46 +102,53 @@ jobs:
           path: OversizeAPI
           ref: main
           fetch-depth: 0
-  
+
       - name: Configure Git
         run: |
           cd OversizeAPI
-          git config --local user.name "github-actions[bot]"
-          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
-  
-      - name: Create New Branch
+          git config user.name "API Updater Bot"
+          git config user.email "actions@users.noreply.github.com"
+
+      - name: Create Branch
         run: |
           cd OversizeAPI
-          git checkout -b update-openapi-${{ needs.bundle.outputs.timestamp }}
-  
-      - name: Copy OpenAPI Spec
+          git checkout -b update/api-${{ needs.bundle.outputs.timestamp }}
+
+      - name: Copy Files
         run: |
-          cp bundle/openapi.yaml OversizeAPI/Sources/App/openapi.yaml
-  
-      - name: Commit Changes
+          mkdir -p OversizeAPI/Sources/App
+          cp artifacts/openapi.yaml OversizeAPI/Sources/App/openapi.yaml
+          echo "Copied files:"
+          ls -la OversizeAPI/Sources/App/
+
+      - name: Check Changes
+        id: check-changes
+        run: |
+          cd OversizeAPI
+          git add -N Sources/App/openapi.yaml
+          git diff --exit-code --quiet Sources/App/openapi.yaml || echo "changes_detected=true" >> $GITHUB_OUTPUT
+
+      - name: Commit and Push
+        if: steps.check-changes.outputs.changes_detected == 'true'
         run: |
           cd OversizeAPI
           git add Sources/App/openapi.yaml
-          git commit -m "chore: update OpenAPI specification from $GITHUB_REPOSITORY"
-  
-      - name: Push Changes
-        run: |
-          cd OversizeAPI
-          git push origin update-openapi-${{ needs.bundle.outputs.timestamp }}
-  
-      - name: Create Pull Request
+          git commit -m "chore: Update API spec from ${{ github.repository }}"
+          git push origin update/api-${{ needs.bundle.outputs.timestamp }}
+
+      - name: Create PR
+        if: steps.check-changes.outputs.changes_detected == 'true'
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.ACTIONS_TOKEN }}
           path: OversizeAPI
-          base: main
-          branch: update-openapi-${{ needs.bundle.outputs.timestamp }}
-          title: "chore: update OpenAPI specification"
+          title: "API Specification Update"
           body: |
-            Automated update from ${{ github.repository }}
+            Automatic API update from [${{ github.repository }}](${{ github.server_url }}/${{ github.repository }})
             
-            - Source: ${{ github.server_url }}/${{ github.repository }}
-            - Documentation: ${{ needs.deploy-pages.outputs.page_url }}
-          labels: automated-pr,documentation
+            **Documentation**: [${{ needs.deploy-pages.outputs.page_url }}](${{ needs.deploy-pages.outputs.page_url }})
+          labels: automated,api-update
+          branch: update/api-${{ needs.bundle.outputs.timestamp }}
+          base: main
           delete-branch: true
-  
+          draft: false

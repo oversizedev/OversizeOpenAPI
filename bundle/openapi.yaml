@@ -189,50 +189,6 @@ paths:
                   error:
                     type: string
                     example: Internal server error
-  /v1/app/{id}/ads:
-    get:
-      operationId: getAppAds
-      summary: Retrieve application ads
-      description: Get all ads features associated with a specific application
-      security:
-        - ApiKeyAuth: []
-      parameters:
-        - name: id
-          required: true
-          in: path
-          description: The application id used in the returned features
-          schema:
-            type: integer
-            example: 1
-      responses:
-        '200':
-          description: A success response
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Ad'
-        '404':
-          description: Application ads not found
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                    example: Application ads not found
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                    example: Internal server error
 components:
   securitySchemes:
     ApiKeyAuth:
@@ -299,24 +255,3 @@ components:
           type: string
           example: ffffff
           description: Background color value in hex format without
-    Ad:
-      type: object
-      required:
-        - id
-        - title
-        - description
-      properties:
-        id:
-          type: string
-          example: '6443709281'
-        title:
-          type: string
-          example: Control weight easily, follow the successes of every month
-        description:
-          type: string
-          example: Control weight easily, follow the successes of every month
-        iconURL:
-          type: string
-        priority:
-          type: integer
-          example: 1

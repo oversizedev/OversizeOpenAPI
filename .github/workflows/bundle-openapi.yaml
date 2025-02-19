@@ -80,7 +80,7 @@ jobs:
 
   create-pr:
     name: Create API PR
-    needs: [bundle, deploy-pages]
+    needs: deploy-pages
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
@@ -129,7 +129,6 @@ jobs:
 
       - name: Copy Files
         run: |
-          mkdir -p ${{ github.workspace }}/OversizeAPI/Sources/App
           cp -v ${{ github.workspace }}/artifacts/openapi.yaml ${{ github.workspace }}/OversizeAPI/Sources/App/openapi.yaml
           echo "File verification:"
           ls -l ${{ github.workspace }}/OversizeAPI/Sources/App/openapi.yaml
@@ -139,27 +138,27 @@ jobs:
         id: check-changes
         run: |
           cd ${{ github.workspace }}/OversizeAPI
-          git add -A
+          git add .
           
-          if ! git diff --exit-code --quiet origin/main -- Sources/App/openapi.yaml; then
-            echo "changes_detected=true" >> $GITHUB_OUTPUT
-            echo "Changes found:"
-            git diff origin/main -- Sources/App/openapi.yaml
-          else
-            echo "changes_detected=false" >> $GITHUB_OUTPUT
-            echo "No changes detected"
-          fi
+          # if ! git diff --exit-code --quiet origin/main -- Sources/App/openapi.yaml; then
+          #   echo "changes_detected=true" >> $GITHUB_OUTPUT
+          #   echo "Changes found:"
+          #   git diff origin/main -- Sources/App/openapi.yaml
+          # else
+          #   echo "changes_detected=false" >> $GITHUB_OUTPUT
+          #   echo "No changes detected"
+          # fi
 
       - name: Commit Changes
-        if: steps.check-changes.outputs.changes_detected == 'true'
+        # if: steps.check-changes.outputs.changes_detected == 'true'
         run: |
           cd ${{ github.workspace }}/OversizeAPI
           git commit -m "chore: Update OpenAPI specification [skip ci]"
           git push origin update/api-${{ needs.bundle.outputs.timestamp }}
 
       - name: Create PR
-        if: steps.check-changes.outputs.changes_detected == 'true'
-        uses: peter-evans/create-pull-request@v5
+        # if: steps.check-changes.outputs.changes_detected == 'true'
+        uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ secrets.ACTIONS_TOKEN }}
           path: ${{ github.workspace }}/OversizeAPI

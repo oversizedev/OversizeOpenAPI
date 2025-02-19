@@ -155,7 +155,7 @@ jobs:
           cd ${{ github.workspace }}/OversizeAPI
           git commit -m "chore: Update OpenAPI specification [skip ci]"
           git push origin update/open-api
-      
+
       - name: Create PR
         if: steps.check-changes.outputs.changes_detected == 'true'
         uses: peter-evans/create-pull-request@v7

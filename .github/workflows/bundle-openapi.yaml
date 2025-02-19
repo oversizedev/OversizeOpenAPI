@@ -140,24 +140,24 @@ jobs:
           cd ${{ github.workspace }}/OversizeAPI
           git add .
           
-          # if ! git diff --exit-code --quiet origin/main -- Sources/App/openapi.yaml; then
-          #   echo "changes_detected=true" >> $GITHUB_OUTPUT
-          #   echo "Changes found:"
-          #   git diff origin/main -- Sources/App/openapi.yaml
-          # else
-          #   echo "changes_detected=false" >> $GITHUB_OUTPUT
-          #   echo "No changes detected"
-          # fi
+          if ! git diff --exit-code --quiet origin/main -- Sources/App/openapi.yaml; then
+            echo "changes_detected=true" >> $GITHUB_OUTPUT
+            echo "Changes found:"
+            git diff origin/main -- Sources/App/openapi.yaml
+          else
+            echo "changes_detected=false" >> $GITHUB_OUTPUT
+            echo "No changes detected"
+          fi
 
       - name: Commit Changes
-        # if: steps.check-changes.outputs.changes_detected == 'true'
+        if: steps.check-changes.outputs.changes_detected == 'true'
         run: |
           cd ${{ github.workspace }}/OversizeAPI
           git commit -m "chore: Update OpenAPI specification [skip ci]"
           git push origin update/open-api
-
+      
       - name: Create PR
-        # if: steps.check-changes.outputs.changes_detected == 'true'
+        if: steps.check-changes.outputs.changes_detected == 'true'
         uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ secrets.ACTIONS_TOKEN }}

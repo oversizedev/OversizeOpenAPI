@@ -47,7 +47,7 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: bundle
+          name: bundle    # Changed to match the download name
           path: bundle/
           retention-days: 1
 
@@ -80,7 +80,7 @@ jobs:
       - name: Download bundle artifact
         uses: actions/download-artifact@v4
         with:
-          name: bundle
+          name: bundle    # Changed to match the upload name
           path: bundle
 
       - name: Setup Pages
@@ -108,7 +108,7 @@ jobs:
       - name: Download Bundle
         uses: actions/download-artifact@v4
         with:
-          name: api-bundle
+          name: bundle    # This name now matches the upload name
           path: ${{ github.workspace }}/artifacts
 
       - name: Checkout Target Repo

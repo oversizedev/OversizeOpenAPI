@@ -47,7 +47,7 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: bundle    # Changed to match the download name
+          name: bundle
           path: bundle/
           retention-days: 1
 
@@ -80,7 +80,7 @@ jobs:
       - name: Download bundle artifact
         uses: actions/download-artifact@v4
         with:
-          name: bundle    # Changed to match the upload name
+          name: bundle
           path: bundle
 
       - name: Setup Pages
@@ -108,7 +108,7 @@ jobs:
       - name: Download Bundle
         uses: actions/download-artifact@v4
         with:
-          name: bundle    # This name now matches the upload name
+          name: bundle
           path: ${{ github.workspace }}/artifacts
 
       - name: Checkout Target Repo
@@ -171,7 +171,7 @@ jobs:
         run: |
           cd ${{ github.workspace }}/OversizeAPI
           git commit -m "chore: Update OpenAPI specification [skip ci]"
-          git push origin update/open-api
+          git push origin update/open-api || echo "No changes to push"
 
       - name: Create PR
         if: steps.check-changes.outputs.changes_detected == 'true'

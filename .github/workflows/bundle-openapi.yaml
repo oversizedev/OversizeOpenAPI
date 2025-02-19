@@ -173,5 +173,4 @@ jobs:
             --title "chore: Update OpenAPI specification to ${{ steps.get-tag.outputs.latest_tag }}" \
             --body "Automated update from ${{ github.repository }}\n\nChanges include latest OpenAPI specification updates." \
             --base main \
-            --head $BRANCH_NAME \
-            --label "automated,api-update"
+            --head $BRANCH_NAME

@@ -38,7 +38,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/AppFeature'
+                  $ref: '#/components/schemas/Feature'
         '404':
           description: Application not found
           content:
@@ -48,7 +48,181 @@ paths:
                 properties:
                   error:
                     type: string
-                    example: Application not found
+                    example: Application features not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+  /v1/app/{id}/features/premium:
+    get:
+      operationId: getAppFeaturesPremium
+      summary: Retrieve application premium features
+      description: Get all premium features associated with a specific application
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: id
+          required: true
+          in: path
+          description: The application id used in the returned features
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: A success response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Feature'
+        '404':
+          description: Application features not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Application features not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+  /v1/app/{id}/features/onboarding:
+    get:
+      operationId: getAppFeaturesOnboarding
+      summary: Retrieve application onboarding features
+      description: Get all onboarding features associated with a specific application
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: id
+          required: true
+          in: path
+          description: The application id used in the returned features
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: A success response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Feature'
+        '404':
+          description: Application features not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Application features not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+  /v1/feature/{id}:
+    get:
+      operationId: getAppFeature
+      summary: Retrieve application features
+      description: Get all features associated with a specific application
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: id
+          required: true
+          in: path
+          description: The application id used in the returned feature
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: A success response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Feature'
+        '404':
+          description: Feature not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: App feature not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+  /v1/app/{id}/ads:
+    get:
+      operationId: getAppAds
+      summary: Retrieve application ads
+      description: Get all ads features associated with a specific application
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: id
+          required: true
+          in: path
+          description: The application id used in the returned features
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: A success response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Ad'
+        '404':
+          description: Application ads not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Application ads not found
         '500':
           description: Internal server error
           content:
@@ -66,7 +240,7 @@ components:
       in: header
       name: X-API-Key
   schemas:
-    AppFeature:
+    Feature:
       type: object
       required:
         - id
@@ -125,3 +299,24 @@ components:
           type: string
           example: ffffff
           description: Background color value in hex format without
+    Ad:
+      type: object
+      required:
+        - id
+        - title
+        - description
+      properties:
+        id:
+          type: string
+          example: '6443709281'
+        title:
+          type: string
+          example: Control weight easily, follow the successes of every month
+        description:
+          type: string
+          example: Control weight easily, follow the successes of every month
+        iconURL:
+          type: string
+        priority:
+          type: integer
+          example: 1

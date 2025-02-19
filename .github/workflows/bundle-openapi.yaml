@@ -119,7 +119,7 @@ jobs:
       - name: Create Branch
         run: |
           cd ${{ github.workspace }}/OversizeAPI
-          git checkout -b update/api-${{ needs.bundle.outputs.timestamp }}
+          git checkout -b update/open-api
 
       - name: Validate Target Repo
         run: |
@@ -154,7 +154,7 @@ jobs:
         run: |
           cd ${{ github.workspace }}/OversizeAPI
           git commit -m "chore: Update OpenAPI specification [skip ci]"
-          git push origin update/api-${{ needs.bundle.outputs.timestamp }}
+          git push origin update/open-api
 
       - name: Create PR
         # if: steps.check-changes.outputs.changes_detected == 'true'
@@ -169,7 +169,7 @@ jobs:
             - Source: ${{ github.server_url }}/${{ github.repository }}
             - Documentation: ${{ needs.deploy-pages.outputs.page_url }}
           labels: automated,api-update
-          branch: update/api-${{ needs.bundle.outputs.timestamp }}
+          branch: update/open-api
           base: main
           delete-branch: false
           commit-message: "chore: Update OpenAPI specification [skip ci]"

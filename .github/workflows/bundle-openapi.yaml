@@ -23,46 +23,30 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-
       - name: Install Redocly CLI
         run: npm install -g @redocly/cli
-
       - name: Bundle OpenAPI Spec
         run: |
           mkdir -p bundle
           redocly bundle openapi.yaml --output bundle/openapi.yaml
-
       - name: Validate OpenAPI Spec
         run: redocly lint bundle/openapi.yaml
-
       - name: Generate Documentation
         run: |
           redocly build-docs bundle/openapi.yaml -o bundle/index.html
-
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: bundle
           path: bundle/
           retention-days: 1
-
       - name: Get current timestamp
         id: timestamp
         run: echo "timestamp=$(date +'%Y%m%d-%H%M%S')" >> $GITHUB_OUTPUT
-
-      - name: Commit and Push Changes
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add bundle/openapi.yaml bundle/index.html
-          git commit -m "chore: update bundled OpenAPI specification [skip ci]" || echo "No changes to commit"
-          git push || echo "No changes to push"
 
   deploy-pages:
     name: Deploy to GitHub Pages
@@ -82,15 +66,12 @@ jobs:
         with:
           name: bundle
           path: bundle
-
       - name: Setup Pages
         uses: actions/configure-pages@v4
-
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: bundle
-
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
@@ -110,7 +91,6 @@ jobs:
         with:
           name: bundle
           path: ${{ github.workspace }}/artifacts
-
       - name: Checkout Target Repo
         uses: actions/checkout@v4
         with:
@@ -119,38 +99,32 @@ jobs:
           path: ${{ github.workspace }}/OversizeAPI
           ref: main
           fetch-depth: 0
-
       - name: Configure Git
         run: |
           cd ${{ github.workspace }}/OversizeAPI
           git config user.name "API Updater Bot"
           git config user.email "actions@users.noreply.github.com"
-
       - name: Sync with Origin
         run: |
           cd ${{ github.workspace }}/OversizeAPI
           git fetch origin
           git reset --hard origin/main
           git clean -fd
-
       - name: Create Branch
         run: |
           cd ${{ github.workspace }}/OversizeAPI
-          git checkout -b update/open-api
-
+          git checkout -b update/open-api-temp
       - name: Validate Target Repo
         run: |
           cd ${{ github.workspace }}/OversizeAPI
           echo "Current branch: $(git branch --show-current)"
           git status
-
       - name: Copy Files
         run: |
           cp -v ${{ github.workspace }}/artifacts/openapi.yaml ${{ github.workspace }}/OversizeAPI/Sources/App/openapi.yaml
           echo "File verification:"
           ls -l ${{ github.workspace }}/OversizeAPI/Sources/App/openapi.yaml
           md5sum ${{ github.workspace }}/OversizeAPI/Sources/App/openapi.yaml
-
       - name: Check Changes
         id: check-changes
         run: |
@@ -165,15 +139,17 @@ jobs:
             echo "changes_detected=false" >> $GITHUB_OUTPUT
             echo "No changes detected"
           fi
-
       - name: Commit Changes
         if: steps.check-changes.outputs.changes_detected == 'true'
         run: |
           cd ${{ github.workspace }}/OversizeAPI
           git add .
           git commit -m "chore: Update OpenAPI specification [skip ci]" || echo "No changes to commit"
-          git push origin update/open-api || echo "No changes to push"
-      
+      - name: Push Changes to Temporary Branch
+        if: steps.check-changes.outputs.changes_detected == 'true'
+        run: |
+          cd ${{ github.workspace }}/OversizeAPI
+          git push origin update/open-api-temp || echo "No changes to push"
       - name: Create PR
         if: steps.check-changes.outputs.changes_detected == 'true'
         uses: peter-evans/create-pull-request@v7
@@ -187,7 +163,7 @@ jobs:
             - Source: ${{ github.server_url }}/${{ github.repository }}
             - Documentation: ${{ needs.deploy-pages.outputs.page_url }}
           labels: automated,api-update
-          branch: update/open-api
+          branch: update/open-api-temp
           base: main
-          delete-branch: false
+          delete-branch: true
           commit-message: "chore: Update OpenAPI specification [skip ci]"

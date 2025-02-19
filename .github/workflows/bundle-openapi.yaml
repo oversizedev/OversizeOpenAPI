@@ -116,14 +116,14 @@ jobs:
           LATEST_TAG=$(git describe --tags --always --abbrev=0 || echo "0.0.1")
           echo "latest_tag=$LATEST_TAG" >> $GITHUB_OUTPUT
 
-      - name: Checkout Target Repository
+      - name: Checkout Target Repo
         uses: actions/checkout@v4
         with:
           repository: oversizedev/OversizeAPI
-          path: target_repo
-          token: ${{ secrets.ACCESS_TOKEN }}
-          fetch-depth: 1
+          token: ${{ secrets.ACTIONS_TOKEN }}
+          path: ${{ github.workspace }}/OversizeAPI
           ref: main
+          fetch-depth: 0
 
       - name: Configure Git in Target Repository
         run: |

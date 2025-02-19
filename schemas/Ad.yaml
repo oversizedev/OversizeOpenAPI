@@ -1,0 +1,20 @@
+type: object
+required:
+  - id
+  - title
+  - description
+properties:
+  id:
+    type: string
+    example: '6443709281'
+  title:
+    type: string
+    example: Control weight easily, follow the successes of every month
+  description:
+    type: string
+    example: Control weight easily, follow the successes of every month
+  iconURL:
+    type: string
+  priority:
+    type: integer
+    example: 1

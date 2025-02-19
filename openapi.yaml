@@ -26,7 +26,16 @@ components:
 
 paths:
   /v1/app/{id}/features:
-    $ref: './paths/AppFeatures.yaml'
+    $ref: './paths/GetAppFeatures.yaml'
+
+  /v1/app/{id}/features/premium:
+    $ref: './paths/GetAppFeaturesPremium.yaml'
+
+  /v1/app/{id}/features/onboarding:
+    $ref: './paths/GetAppFeaturesOnboarding.yaml'
 
   /v1/feature/{id}:
-    $ref: './paths/AppFeaturePath.yaml'
+    $ref: './paths/GetAppFeature.yaml'
+
+  /v1/app/{id}/ads:
+    $ref: './paths/GetAppAds.yaml'

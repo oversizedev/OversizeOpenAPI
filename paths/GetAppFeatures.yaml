@@ -20,7 +20,7 @@ get:
           schema:
             type: array
             items:
-              $ref: '../schemas/AppFeature.yaml'
+              $ref: '../schemas/Feature.yaml'
     '404':
       description: Application not found
       content:
@@ -30,7 +30,7 @@ get:
             properties:
               error:
                 type: string
-                example: "Application not found"
+                example: "Application features not found"
     '500':
       description: Internal server error
       content:

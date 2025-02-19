@@ -1,14 +1,14 @@
 get:
-  operationId: getAppFeature
-  summary: Retrieve application features
-  description: Get all features associated with a specific application
+  operationId: getAppFeaturesOnboarding
+  summary: Retrieve application onboarding features
+  description: Get all onboarding features associated with a specific application
   security:
     - ApiKeyAuth: []
   parameters:
     - name: id
       required: true
       in: path
-      description: The application id used in the returned feature
+      description: The application id used in the returned features
       schema:
         type: integer
         example: 001
@@ -18,9 +18,11 @@ get:
       content:
         application/json:
           schema:
-            $ref: '../schemas/AppFeature.yaml'
+            type: array
+            items:
+              $ref: '../schemas/Feature.yaml'
     '404':
-      description: Feature not found
+      description: Application features not found
       content:
         application/json:
           schema:
@@ -28,7 +30,7 @@ get:
             properties:
               error:
                 type: string
-                example: "Feature not found"
+                example: "Application features not found"
     '500':
       description: Internal server error
       content:

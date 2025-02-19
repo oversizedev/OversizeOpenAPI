@@ -1,0 +1,43 @@
+get:
+  operationId: getAppAds
+  summary: Retrieve application ads
+  description: Get all ads features associated with a specific application
+  security:
+    - ApiKeyAuth: []
+  parameters:
+    - name: id
+      required: true
+      in: path
+      description: The application id used in the returned features
+      schema:
+        type: integer
+        example: 001
+  responses:
+    '200':
+      description: A success response
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '../schemas/Ad.yaml'
+    '404':
+      description: Application ads not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Application ads not found"
+    '500':
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Internal server error"

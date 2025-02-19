@@ -1,0 +1,41 @@
+get:
+  operationId: getAppFeature
+  summary: Retrieve application features
+  description: Get all features associated with a specific application
+  security:
+    - ApiKeyAuth: []
+  parameters:
+    - name: id
+      required: true
+      in: path
+      description: The application id used in the returned feature
+      schema:
+        type: integer
+        example: 001
+  responses:
+    '200':
+      description: A success response
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/Feature.yaml'
+    '404':
+      description: Feature not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "App feature not found"
+    '500':
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Internal server error"

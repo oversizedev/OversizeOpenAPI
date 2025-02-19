@@ -127,7 +127,7 @@ jobs:
           git clone \
             --depth=1 \
             --branch=main \
-            https://x-access-token:${{ secrets.ACCESS_TOKEN }}@github.com/oversizedev/OversizeAPI.git \
+            https://x-access-token:${{ secrets.ACTIONS_TOKEN }}@github.com/oversizedev/OversizeAPI.git \
             target_repo
 
       - name: Configure Git in Target Repository

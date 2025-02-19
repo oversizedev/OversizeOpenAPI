@@ -23,30 +23,46 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+
       - name: Install Redocly CLI
         run: npm install -g @redocly/cli
+
       - name: Bundle OpenAPI Spec
         run: |
           mkdir -p bundle
           redocly bundle openapi.yaml --output bundle/openapi.yaml
+
       - name: Validate OpenAPI Spec
         run: redocly lint bundle/openapi.yaml
+
       - name: Generate Documentation
         run: |
           redocly build-docs bundle/openapi.yaml -o bundle/index.html
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: bundle
           path: bundle/
           retention-days: 1
+
       - name: Get current timestamp
         id: timestamp
         run: echo "timestamp=$(date +'%Y%m%d-%H%M%S')" >> $GITHUB_OUTPUT
+
+      - name: Commit and Push Changes
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add bundle/openapi.yaml bundle/index.html
+          git commit -m "chore: update bundled OpenAPI specification [skip ci]" || echo "No changes to commit"
+          git push || echo "No changes to push"
 
   deploy-pages:
     name: Deploy to GitHub Pages
@@ -66,12 +82,15 @@ jobs:
         with:
           name: bundle
           path: bundle
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: bundle
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
@@ -86,84 +105,75 @@ jobs:
       pull-requests: write
     
     steps:
-      - name: Download Bundle
-        uses: actions/download-artifact@v4
-        with:
-          name: bundle
-          path: ${{ github.workspace }}/artifacts
-      - name: Checkout Target Repo
+      - name: Checkout Source Repository
         uses: actions/checkout@v4
         with:
-          repository: oversizedev/OversizeAPI
-          token: ${{ secrets.ACTIONS_TOKEN }}
-          path: ${{ github.workspace }}/OversizeAPI
-          ref: main
           fetch-depth: 0
-      - name: Configure Git
+
+      - name: Get Latest Tag
+        id: get-tag
         run: |
-          cd ${{ github.workspace }}/OversizeAPI
+          LATEST_TAG=$(git describe --tags --always --abbrev=0 || echo "0.0.1")
+          echo "latest_tag=$LATEST_TAG" >> $GITHUB_OUTPUT
+
+      - name: Setup GitHub CLI
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" > ./token.txt
+          gh auth login --with-token < ./token.txt
+          rm ./token.txt
+
+      - name: Checkout Target Repository
+        run: |
+          git clone \
+            --depth=1 \
+            --branch=main \
+            https://x-access-token:${{ secrets.ACCESS_TOKEN }}@github.com/oversizedev/OversizeAPI.git \
+            target_repo
+
+      - name: Configure Git in Target Repository
+        run: |
+          cd target_repo
           git config user.name "API Updater Bot"
-          git config user.email "actions@users.noreply.github.com"
-      - name: Sync with Origin
+          git config user.email "actions@github.com"
+          
+      - name: Create and Switch to Feature Branch
         run: |
-          cd ${{ github.workspace }}/OversizeAPI
-          git fetch origin
-          git reset --hard origin/main
-          git clean -fd
-      - name: Create Branch
+          cd target_repo
+          BRANCH_NAME="update/openapi-${{ steps.get-tag.outputs.latest_tag }}"
+          git checkout -b $BRANCH_NAME
+          
+      - name: Copy Updated Files
         run: |
-          cd ${{ github.workspace }}/OversizeAPI
-          git checkout -b update/open-api-temp
-      - name: Validate Target Repo
-        run: |
-          cd ${{ github.workspace }}/OversizeAPI
-          echo "Current branch: $(git branch --show-current)"
-          git status
-      - name: Copy Files
-        run: |
-          cp -v ${{ github.workspace }}/artifacts/openapi.yaml ${{ github.workspace }}/OversizeAPI/Sources/App/openapi.yaml
-          echo "File verification:"
-          ls -l ${{ github.workspace }}/OversizeAPI/Sources/App/openapi.yaml
-          md5sum ${{ github.workspace }}/OversizeAPI/Sources/App/openapi.yaml
-      - name: Check Changes
+          cp -v openapi.yaml target_repo/Sources/App/
+          cd target_repo
+          
+      - name: Check for Changes
         id: check-changes
         run: |
-          cd ${{ github.workspace }}/OversizeAPI
+          cd target_repo
           git add .
-          
-          if ! git diff --exit-code --quiet origin/main -- Sources/App/openapi.yaml; then
+          if ! git diff --staged --quiet; then
             echo "changes_detected=true" >> $GITHUB_OUTPUT
-            echo "Changes found:"
-            git diff origin/main -- Sources/App/openapi.yaml
           else
             echo "changes_detected=false" >> $GITHUB_OUTPUT
-            echo "No changes detected"
           fi
-      - name: Commit Changes
+
+      - name: Commit and Push Changes
         if: steps.check-changes.outputs.changes_detected == 'true'
         run: |
-          cd ${{ github.workspace }}/OversizeAPI
-          git add .
-          git commit -m "chore: Update OpenAPI specification [skip ci]" || echo "No changes to commit"
-      - name: Push Changes to Temporary Branch
+          cd target_repo
+          BRANCH_NAME="update/openapi-${{ steps.get-tag.outputs.latest_tag }}"
+          git commit -m "chore: Update OpenAPI specification to ${{ steps.get-tag.outputs.latest_tag }}"
+          git push origin $BRANCH_NAME
+
+      - name: Create Pull Request
         if: steps.check-changes.outputs.changes_detected == 'true'
         run: |
-          cd ${{ github.workspace }}/OversizeAPI
-          git push origin update/open-api-temp || echo "No changes to push"
-      - name: Create PR
-        if: steps.check-changes.outputs.changes_detected == 'true'
-        uses: peter-evans/create-pull-request@v7
-        with:
-          token: ${{ secrets.ACTIONS_TOKEN }}
-          path: ${{ github.workspace }}/OversizeAPI
-          title: "API Specification Update"
-          body: |
-            Automated update from ${{ github.repository }}
-            
-            - Source: ${{ github.server_url }}/${{ github.repository }}
-            - Documentation: ${{ needs.deploy-pages.outputs.page_url }}
-          labels: automated,api-update
-          branch: update/open-api-temp
-          base: main
-          delete-branch: true
-          commit-message: "chore: Update OpenAPI specification [skip ci]"
+          cd target_repo
+          BRANCH_NAME="update/openapi-${{ steps.get-tag.outputs.latest_tag }}"
+          gh pr create \
+            --title "chore: Update OpenAPI specification to ${{ steps.get-tag.outputs.latest_tag }}" \
+            --body "Automated update from ${{ github.repository }}\n\nChanges include latest OpenAPI specification updates." \
+            --base main \
+            --head $BRANCH_NAME \
+            --label "automated,api-update"

@@ -139,7 +139,7 @@ jobs:
           
       - name: Copy Updated Files
         run: |
-          cp -v ${{ github.workspace }}/artifacts/openapi.yaml target_repo/Sources/App/
+          cp -v ${{ github.workspace }}/artifacts/bundle.yaml target_repo/Sources/App/
           cd target_repo
           
       - name: Check for Changes

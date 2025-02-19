@@ -164,7 +164,7 @@ jobs:
       - name: Create Pull Request
         if: steps.check-changes.outputs.changes_detected == 'true'
         env:
-          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.ACTIONS_TOKEN }}
         run: |
           cd target_repo
           BRANCH_NAME="update/openapi-${{ steps.get-tag.outputs.latest_tag }}"

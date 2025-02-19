@@ -158,7 +158,7 @@ jobs:
         run: |
           cd target_repo
           BRANCH_NAME="update/openapi-${{ steps.get-tag.outputs.latest_tag }}"
-          git commit -m "chore: Update OpenAPI specification to ${{ steps.get-tag.outputs.latest_tag }}"
+          git commit -m "Update OpenAPI specification to ${{ steps.get-tag.outputs.latest_tag }}"
           git push -u origin $BRANCH_NAME
 
       - name: Create Pull Request
@@ -170,7 +170,7 @@ jobs:
           BRANCH_NAME="update/openapi-${{ steps.get-tag.outputs.latest_tag }}"
           gh pr create \
             --repo oversizedev/OversizeAPI \
-            --title "chore: Update OpenAPI specification to ${{ steps.get-tag.outputs.latest_tag }}" \
-            --body "Automated update from ${{ github.repository }}\n\nChanges include latest OpenAPI specification updates." \
+            --title "Update OpenAPI specification" \
+            --body "Automated update from ${{ github.repository }}. Changes include latest OpenAPI specification updates" \
             --base main \
             --head $BRANCH_NAME

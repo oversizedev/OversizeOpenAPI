@@ -36,3 +36,6 @@ paths:
 
   /v1/feature/{id}:
     $ref: './paths/GetAppFeature.yaml'
+
+  /v1/app/{id}/ads:
+    $ref: './paths/GetAppAds.yaml'

@@ -1,9 +1,13 @@
-name: API Spec CI
+name: Bundle OpenAPI Spec
 
 on:
   push:
     branches:
       - main
+    paths:
+      - '**.yaml'
+      - '**.yml'
+  pull_request:
     paths:
       - '**.yaml'
       - '**.yml'
@@ -17,7 +21,7 @@ jobs:
       timestamp: ${{ steps.timestamp.outputs.timestamp }}
     
     steps:
-      - name: Checkout repo
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Setup Node.js
@@ -36,45 +40,58 @@ jobs:
       - name: Validate OpenAPI Spec
         run: redocly lint bundle/openapi.yaml
 
-      - name: Generate Docs
-        run: redocly build-docs bundle/openapi.yaml -o bundle/index.html
+      - name: Generate Documentation
+        run: |
+          redocly build-docs bundle/openapi.yaml -o bundle/index.html
 
-      - name: Upload Artifacts
+      - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: api-bundle
+          name: bundle
           path: bundle/
           retention-days: 1
 
-      - name: Generate Timestamp
+      - name: Get current timestamp
         id: timestamp
-        run: echo "timestamp=$(date -u +'%Y%m%dT%H%M%SZ')" >> $GITHUB_OUTPUT
+        run: echo "timestamp=$(date +'%Y%m%d-%H%M%S')" >> $GITHUB_OUTPUT
+
+      - name: Commit and Push Changes
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add bundle/openapi.yaml bundle/index.html
+          git commit -m "chore: update bundled OpenAPI specification [skip ci]" || echo "No changes to commit"
+          git push || echo "No changes to push"
 
   deploy-pages:
-    name: Deploy Docs
+    name: Deploy to GitHub Pages
     needs: bundle
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
       pages: write
       id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     
     steps:
-      - name: Download Artifacts
+      - name: Download bundle artifact
         uses: actions/download-artifact@v4
         with:
-          name: api-bundle
-          path: dist
+          name: bundle
+          path: bundle
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
-      - name: Upload Artifact
+      - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: dist
+          path: bundle
 
-      - name: Deploy
+      - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
 

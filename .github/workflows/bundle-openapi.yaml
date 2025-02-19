@@ -116,19 +116,14 @@ jobs:
           LATEST_TAG=$(git describe --tags --always --abbrev=0 || echo "0.0.1")
           echo "latest_tag=$LATEST_TAG" >> $GITHUB_OUTPUT
 
-      - name: Setup GitHub CLI
-        run: |
-          echo "${{ secrets.GITHUB_TOKEN }}" > ./token.txt
-          gh auth login --with-token < ./token.txt
-          rm ./token.txt
-
       - name: Checkout Target Repository
-        run: |
-          git clone \
-            --depth=1 \
-            --branch=main \
-            https://${{ secrets.ACTIONS_TOKEN }}@github.com/oversizedev/OversizeAPI.git \
-            target_repo
+        uses: actions/checkout@v4
+        with:
+          repository: oversizedev/OversizeAPI
+          path: target_repo
+          token: ${{ secrets.ACCESS_TOKEN }}
+          fetch-depth: 1
+          ref: main
 
       - name: Configure Git in Target Repository
         run: |
@@ -164,14 +159,17 @@ jobs:
           cd target_repo
           BRANCH_NAME="update/openapi-${{ steps.get-tag.outputs.latest_tag }}"
           git commit -m "chore: Update OpenAPI specification to ${{ steps.get-tag.outputs.latest_tag }}"
-          git push origin $BRANCH_NAME
+          git push -u origin $BRANCH_NAME
 
       - name: Create Pull Request
         if: steps.check-changes.outputs.changes_detected == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
         run: |
           cd target_repo
           BRANCH_NAME="update/openapi-${{ steps.get-tag.outputs.latest_tag }}"
           gh pr create \
+            --repo oversizedev/OversizeAPI \
             --title "chore: Update OpenAPI specification to ${{ steps.get-tag.outputs.latest_tag }}" \
             --body "Automated update from ${{ github.repository }}\n\nChanges include latest OpenAPI specification updates." \
             --base main \

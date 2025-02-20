@@ -14,12 +14,9 @@ on:
   workflow_dispatch:
 
 jobs:
-  bundle:
-    name: Bundle and Validate OpenAPI
+  validate:
+    name: Validate OpenAPI
     runs-on: ubuntu-latest
-    outputs:
-      timestamp: ${{ steps.timestamp.outputs.timestamp }}
-    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -32,33 +29,67 @@ jobs:
       - name: Install Redocly CLI
         run: npm install -g @redocly/cli
 
-      # - name: Bundle OpenAPI Spec
-      #   run: |
-      #     mkdir -p bundle
-      #     redocly bundle openapi.yaml --output bundle/openapi.yaml
-
-      # - name: Validate OpenAPI Spec
-      #   run: redocly lint bundle/openapi.yaml
-
       - name: Validate OpenAPI Spec
         run: redocly lint openapi.yaml
 
+  bump-version:
+    name: Bump Version
+    needs: validate
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    outputs:
+      new_version: ${{ steps.get_version.outputs.new_tag }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       - name: Bump version and push tag
+        id: bump_version
         uses: anothrNick/github-tag-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.ACTIONS_TOKEN }}
           WITH_V: false
+          
+      - name: Get new version
+        id: get_version
+        run: |
+          NEW_TAG="${{ steps.bump_version.outputs.new_tag }}"
+          echo "new_tag=$NEW_TAG" >> $GITHUB_OUTPUT
+
+  bundle:
+    name: Bundle OpenAPI
+    needs: [validate, bump-version]
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Redocly CLI
+        run: npm install -g @redocly/cli
+
+      - name: Install yq
+        run: |
+          sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
+          sudo chmod a+x /usr/local/bin/yq
 
       - name: Update OpenAPI version
-        run: yq -i '.info.version = "${{ steps.get_version.outputs.latest_tag }}"' openapi.yaml
+        run: |
+          yq -i '.info.version = strenv(NEW_VERSION)' openapi.yaml
+        env:
+          NEW_VERSION: ${{ needs.bump-version.outputs.new_version }}
 
-      - name: Re Bundle OpenAPI Spec with new version
+      - name: Bundle OpenAPI Spec
         run: |
           mkdir -p bundle
           redocly bundle openapi.yaml --output bundle/openapi.yaml
-
-      - name: Validate OpenAPI Spec with new version
-        run: redocly lint bundle/openapi.yaml
 
       - name: Generate Documentation
         run: |
@@ -71,17 +102,12 @@ jobs:
           path: bundle/
           retention-days: 1
 
-      - name: Get current timestamp
-        id: timestamp
-        run: echo "timestamp=$(date +'%Y%m%d-%H%M%S')" >> $GITHUB_OUTPUT
-
       - name: Commit and Push Changes
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add bundle/openapi.yaml bundle/index.html
-          git commit -m "Update bundled OpenAPI specification" || echo "No changes to commit"
+          git add openapi.yaml bundle/openapi.yaml bundle/index.html
+          git commit -m "Update OpenAPI specification to version ${{ needs.bump-version.outputs.new_version }}" || echo "No changes to commit"
           git push || echo "No changes to push"
 
   deploy-pages:
@@ -95,7 +121,6 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    
     steps:
       - name: Download bundle artifact
         uses: actions/download-artifact@v4
@@ -117,24 +142,17 @@ jobs:
 
   create-pr:
     name: Create API PR
-    needs: bundle
+    needs: [bundle, bump-version]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
       contents: write
       pull-requests: write
-    
     steps:
       - name: Checkout Source Repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
-      - name: Get Latest Tag
-        id: get-tag
-        run: |
-          LATEST_TAG=$(git describe --tags --always --abbrev=0 || echo "0.0.1")
-          echo "latest_tag=$LATEST_TAG" >> $GITHUB_OUTPUT
 
       - name: Checkout Target Repository
         uses: actions/checkout@v4
@@ -145,6 +163,12 @@ jobs:
           fetch-depth: 1
           ref: main
 
+      - name: Download bundle artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: bundle
+          path: bundle
+
       - name: Configure Git in Target Repository
         run: |
           cd target_repo
@@ -154,7 +178,7 @@ jobs:
       - name: Create and Switch to Feature Branch
         run: |
           cd target_repo
-          BRANCH_NAME="update/openapi-${{ steps.get-tag.outputs.latest_tag }}"
+          BRANCH_NAME="update/openapi-${{ needs.bump-version.outputs.new_version }}"
           git checkout -b $BRANCH_NAME
           
       - name: Copy Updated Files
@@ -177,7 +201,7 @@ jobs:
         if: steps.check-changes.outputs.changes_detected == 'true'
         run: |
           cd target_repo
-          BRANCH_NAME="update/openapi-${{ steps.get-tag.outputs.latest_tag }}"
+          BRANCH_NAME="update/openapi-${{ needs.bump-version.outputs.new_version }}"
           git commit -m "Update OpenAPI specification"
           git push -u origin $BRANCH_NAME
 
@@ -187,7 +211,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.ACTIONS_TOKEN }}
         run: |
           cd target_repo
-          BRANCH_NAME="update/openapi-${{ steps.get-tag.outputs.latest_tag }}"
+          BRANCH_NAME="update/openapi-${{ needs.bump-version.outputs.new_version }}"
           gh pr create \
             --repo oversizedev/OversizeAPI \
             --title "Update OpenAPI specification" \

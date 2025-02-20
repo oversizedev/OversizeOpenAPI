@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: OversizeAPI
-  version: ''
+  version: 0.1.0
   description: API specification for Oversize application features
   contact:
     name: Oversize Team

@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: OversizeAPI
-  version: 1.0.0
+  version: 0.1.0
   description: API specification for Oversize application features
   contact:
     name: Oversize Team
@@ -9,33 +9,25 @@ info:
   license:
     name: MIT
     url: https://opensource.org/licenses/MIT
-
 servers:
   - url: https://api.oversize.app
     description: API url
-
 security:
   - ApiKeyAuth: []
-
 components:
   securitySchemes:
     ApiKeyAuth:
       type: apiKey
       in: header
       name: X-API-Key
-
 paths:
   /v1/app/{id}/features:
     $ref: './paths/GetAppFeatures.yaml'
-
   /v1/app/{id}/features/premium:
     $ref: './paths/GetAppFeaturesPremium.yaml'
-
   /v1/app/{id}/features/onboarding:
     $ref: './paths/GetAppFeaturesOnboarding.yaml'
-
   /v1/feature/{id}:
     $ref: './paths/GetAppFeature.yaml'
-
-  # /v1/app/{id}/ads:
-  #   $ref: './paths/GetAppAds.yaml'
+# /v1/app/{id}/ads:
+#   $ref: './paths/GetAppAds.yaml'

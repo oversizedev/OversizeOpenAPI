@@ -3,15 +3,14 @@ name: Bundle OpenAPI Spec
 on:
   push:
     branches:
-      - main
-    paths:
-      - '**.yaml'
-      - '**.yml'
-  pull_request:
-    paths:
-      - '**.yaml'
-      - '**.yml'
+      - '**'
+    tags:
+      - "*.*.*"
   workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   validate:
@@ -35,7 +34,7 @@ jobs:
   bump-version:
     name: Bump Version
     needs: validate
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' && !startsWith(github.ref, 'refs/tags/')
     runs-on: ubuntu-latest
     outputs:
       new_version: ${{ steps.get_version.outputs.new_tag }}
@@ -60,7 +59,9 @@ jobs:
 
   bundle:
     name: Bundle OpenAPI
-    needs: [validate, bump-version]
+    needs:
+      - validate
+      - bump-version
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
@@ -178,7 +179,7 @@ jobs:
       - name: Create and Switch to Feature Branch
         run: |
           cd target_repo
-          BRANCH_NAME="update/openapi-${{ needs.bump-version.outputs.new_version }}"
+          BRANCH_NAME="openapi/spec-${{ needs.bump-version.outputs.new_version }}"
           git checkout -b $BRANCH_NAME
           
       - name: Copy Updated Files
@@ -201,7 +202,7 @@ jobs:
         if: steps.check-changes.outputs.changes_detected == 'true'
         run: |
           cd target_repo
-          BRANCH_NAME="update/openapi-${{ needs.bump-version.outputs.new_version }}"
+          BRANCH_NAME="openapi/spec-${{ needs.bump-version.outputs.new_version }}"
           git commit -m "Update OpenAPI specification"
           git push -u origin $BRANCH_NAME
 
@@ -211,10 +212,16 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.ACTIONS_TOKEN }}
         run: |
           cd target_repo
-          BRANCH_NAME="update/openapi-${{ needs.bump-version.outputs.new_version }}"
+          BRANCH_NAME="openapi/spec-${{ needs.bump-version.outputs.new_version }}"
           gh pr create \
             --repo oversizedev/OversizeAPI \
             --title "Update OpenAPI specification" \
             --body "Automated update from ${{ github.repository }}. Changes include latest OpenAPI specification updates" \
             --base main \
             --head $BRANCH_NAME
+
+  release:
+    name: Create Release
+    if: github.ref != 'refs/heads/main' && startsWith(github.ref, 'refs/tags/')
+    uses: oversizedev/GithubWorkflows/.github/workflows/release.yml@main
+    secrets: inherit

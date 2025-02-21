@@ -59,7 +59,9 @@ jobs:
 
   bundle:
     name: Bundle OpenAPI
-    needs: [validate, bump-version]
+    needs:
+      - validate
+      - bump-version
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:

@@ -179,7 +179,7 @@ jobs:
       - name: Create and Switch to Feature Branch
         run: |
           cd target_repo
-          BRANCH_NAME="update/openapi-${{ needs.bump-version.outputs.new_version }}"
+          BRANCH_NAME="openapi/spec-${{ needs.bump-version.outputs.new_version }}"
           git checkout -b $BRANCH_NAME
           
       - name: Copy Updated Files
@@ -202,7 +202,7 @@ jobs:
         if: steps.check-changes.outputs.changes_detected == 'true'
         run: |
           cd target_repo
-          BRANCH_NAME="update/openapi-${{ needs.bump-version.outputs.new_version }}"
+          BRANCH_NAME="openapi/spec-${{ needs.bump-version.outputs.new_version }}"
           git commit -m "Update OpenAPI specification"
           git push -u origin $BRANCH_NAME
 
@@ -212,7 +212,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.ACTIONS_TOKEN }}
         run: |
           cd target_repo
-          BRANCH_NAME="update/openapi-${{ needs.bump-version.outputs.new_version }}"
+          BRANCH_NAME="openapi/spec-${{ needs.bump-version.outputs.new_version }}"
           gh pr create \
             --repo oversizedev/OversizeAPI \
             --title "Update OpenAPI specification" \

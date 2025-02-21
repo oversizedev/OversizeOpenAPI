@@ -215,10 +215,12 @@ jobs:
           BRANCH_NAME="openapi/spec-${{ needs.bump-version.outputs.new_version }}"
           gh pr create \
             --repo oversizedev/OversizeAPI \
-            --title "Update OpenAPI specification" \
-            --body "Automated update from ${{ github.repository }}. Changes include latest OpenAPI specification updates" \
+            --title "Update OpenAPI specification to ${{ needs.bump-version.outputs.new_version }}" \
+            --body "Automated update from ${{ github.repository }}. Changes include ${{ needs.bump-version.outputs.new_version }} OpenAPI specification updates" \
             --base main \
-            --head $BRANCH_NAME
+            --head $BRANCH_NAME \
+            --squash \
+            --label open-api
 
   release:
     name: Create Release

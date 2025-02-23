@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: OversizeAPI
-  version: 0.2.0
+  version: 0.3.0
   description: API specification for Oversize application features
   contact:
     name: Oversize Team
@@ -147,48 +147,6 @@ paths:
                   error:
                     type: string
                     example: Internal server error
-  /v1/feature/{id}:
-    get:
-      operationId: getAppFeature
-      summary: Retrieve application features
-      description: Get all features associated with a specific application
-      security:
-        - ApiKeyAuth: []
-      parameters:
-        - name: id
-          required: true
-          in: path
-          description: The application id used in the returned feature
-          schema:
-            type: integer
-            example: 1
-      responses:
-        '200':
-          description: A success response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Feature'
-        '404':
-          description: Feature not found
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                    example: App feature not found
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                    example: Internal server error
   /v1/app/{id}/ads:
     get:
       operationId: getAppAds
@@ -223,6 +181,134 @@ paths:
                   error:
                     type: string
                     example: Application ads not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+  /v1/app/{id}/ad:
+    get:
+      operationId: getAppAd
+      summary: Retrieve application ad
+      description: Get ad associated with a specific application
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: id
+          required: true
+          in: path
+          description: The application id used in the returned ad
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: A success response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ad'
+        '404':
+          description: Application ad not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Application ad not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+  /v1/app/{id}/subscriptions/ids:
+    get:
+      operationId: GetAppSubscriptionIds
+      summary: Retrieve application subscription ids
+      description: Get all subscription ids associated with a specific application
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: id
+          required: true
+          in: path
+          description: The application id used in the returned features
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: A success response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '404':
+          description: Application subscriptions not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Application subscriptions not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+  /v1/feature/{id}:
+    get:
+      operationId: getAppFeature
+      summary: Retrieve application features
+      description: Get all features associated with a specific application
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: id
+          required: true
+          in: path
+          description: The application id used in the returned feature
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: A success response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Feature'
+        '404':
+          description: Feature not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: App feature not found
         '500':
           description: Internal server error
           content:

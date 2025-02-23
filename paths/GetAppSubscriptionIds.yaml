@@ -20,7 +20,7 @@ get:
           schema:
             type: array
             items:
-              type: strings
+              type: string
     '404':
       description: Application subscriptions not found
       content:

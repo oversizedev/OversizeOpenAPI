@@ -13,133 +13,133 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # validate:
-  #   name: Validate OpenAPI
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout repository
-  #       uses: actions/checkout@v4
+  validate:
+    name: Validate OpenAPI
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-  #     - name: Setup Node.js
-  #       uses: actions/setup-node@v4
-  #       with:
-  #         node-version: '20'
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
 
-  #     - name: Install Redocly CLI
-  #       run: npm install -g @redocly/cli
+      - name: Install Redocly CLI
+        run: npm install -g @redocly/cli
 
-  #     - name: Validate OpenAPI Spec
-  #       run: redocly lint openapi.yaml
+      - name: Validate OpenAPI Spec
+        run: redocly lint openapi.yaml
 
-  # bump-version:
-  #   name: Bump Version
-  #   needs: validate
-  #   if: github.ref == 'refs/heads/main' && !startsWith(github.ref, 'refs/tags/')
-  #   runs-on: ubuntu-latest
-  #   outputs:
-  #     new_version: ${{ steps.get_version.outputs.new_tag }}
-  #   steps:
-  #     - name: Checkout repository
-  #       uses: actions/checkout@v4
-  #       with:
-  #         fetch-depth: 0
+  bump-version:
+    name: Bump Version
+    needs: validate
+    if: github.ref == 'refs/heads/main' && !startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    outputs:
+      new_version: ${{ steps.get_version.outputs.new_tag }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-  #     - name: Bump version and push tag
-  #       id: bump_version
-  #       uses: anothrNick/github-tag-action@master
-  #       env:
-  #         GITHUB_TOKEN: ${{ secrets.ACTIONS_TOKEN }}
-  #         WITH_V: false
+      - name: Bump version and push tag
+        id: bump_version
+        uses: anothrNick/github-tag-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.ACTIONS_TOKEN }}
+          WITH_V: false
           
-  #     - name: Get new version
-  #       id: get_version
-  #       run: |
-  #         NEW_TAG="${{ steps.bump_version.outputs.new_tag }}"
-  #         echo "new_tag=$NEW_TAG" >> $GITHUB_OUTPUT
+      - name: Get new version
+        id: get_version
+        run: |
+          NEW_TAG="${{ steps.bump_version.outputs.new_tag }}"
+          echo "new_tag=$NEW_TAG" >> $GITHUB_OUTPUT
 
-  # bundle:
-  #   name: Bundle OpenAPI
-  #   needs:
-  #     - validate
-  #     - bump-version
-  #   if: github.ref == 'refs/heads/main'
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout repository
-  #       uses: actions/checkout@v4
+  bundle:
+    name: Bundle OpenAPI
+    needs:
+      - validate
+      - bump-version
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-  #     - name: Setup Node.js
-  #       uses: actions/setup-node@v4
-  #       with:
-  #         node-version: '20'
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
 
-  #     - name: Install Redocly CLI
-  #       run: npm install -g @redocly/cli
+      - name: Install Redocly CLI
+        run: npm install -g @redocly/cli
 
-  #     - name: Install yq
-  #       run: |
-  #         sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
-  #         sudo chmod a+x /usr/local/bin/yq
+      - name: Install yq
+        run: |
+          sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
+          sudo chmod a+x /usr/local/bin/yq
 
-  #     - name: Update OpenAPI version
-  #       run: |
-  #         yq -i '.info.version = strenv(NEW_VERSION)' openapi.yaml
-  #       env:
-  #         NEW_VERSION: ${{ needs.bump-version.outputs.new_version }}
+      - name: Update OpenAPI version
+        run: |
+          yq -i '.info.version = strenv(NEW_VERSION)' openapi.yaml
+        env:
+          NEW_VERSION: ${{ needs.bump-version.outputs.new_version }}
 
-  #     - name: Bundle OpenAPI Spec
-  #       run: |
-  #         mkdir -p bundle
-  #         redocly bundle openapi.yaml --output bundle/openapi.yaml
+      - name: Bundle OpenAPI Spec
+        run: |
+          mkdir -p bundle
+          redocly bundle openapi.yaml --output bundle/openapi.yaml
 
-  #     - name: Generate Documentation
-  #       run: |
-  #         redocly build-docs bundle/openapi.yaml -o bundle/index.html
+      - name: Generate Documentation
+        run: |
+          redocly build-docs bundle/openapi.yaml -o bundle/index.html
 
-  #     - name: Upload artifacts
-  #       uses: actions/upload-artifact@v4
-  #       with:
-  #         name: bundle
-  #         path: bundle/
-  #         retention-days: 1
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: bundle
+          path: bundle/
+          retention-days: 1
 
-  #     - name: Commit and Push Changes
-  #       run: |
-  #         git config --global user.name "github-actions[bot]"
-  #         git config --global user.email "github-actions[bot]@users.noreply.github.com"
-  #         git add openapi.yaml bundle/openapi.yaml bundle/index.html
-  #         git commit -m "Update OpenAPI specification to version ${{ needs.bump-version.outputs.new_version }}" || echo "No changes to commit"
-  #         git push || echo "No changes to push"
+      - name: Commit and Push Changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add openapi.yaml bundle/openapi.yaml bundle/index.html
+          git commit -m "Update OpenAPI specification to version ${{ needs.bump-version.outputs.new_version }}" || echo "No changes to commit"
+          git push || echo "No changes to push"
 
-  # deploy-pages:
-  #   name: Deploy to GitHub Pages
-  #   needs: bundle
-  #   if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-  #   runs-on: ubuntu-latest
-  #   permissions:
-  #     pages: write
-  #     id-token: write
-  #   environment:
-  #     name: github-pages
-  #     url: ${{ steps.deployment.outputs.page_url }}
-  #   steps:
-  #     - name: Download bundle artifact
-  #       uses: actions/download-artifact@v4
-  #       with:
-  #         name: bundle
-  #         path: bundle
+  deploy-pages:
+    name: Deploy to GitHub Pages
+    needs: bundle
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Download bundle artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: bundle
+          path: bundle
 
-  #     - name: Setup Pages
-  #       uses: actions/configure-pages@v4
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
 
-  #     - name: Upload Pages artifact
-  #       uses: actions/upload-pages-artifact@v3
-  #       with:
-  #         path: bundle
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: bundle
 
-  #     - name: Deploy to GitHub Pages
-  #       id: deployment
-  #       uses: actions/deploy-pages@v4
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
 
   create-pr:
     name: Create API PR
@@ -221,9 +221,9 @@ jobs:
             --head $BRANCH_NAME \
             --label open-api
 
-  # release:
-  #   name: Create Release
-  #   needs: validate
-  #   if: github.ref != 'refs/heads/main' && startsWith(github.ref, 'refs/tags/')
-  #   uses: oversizedev/GithubWorkflows/.github/workflows/release.yml@main
-  #   secrets: inherit
+  release:
+    name: Create Release
+    needs: validate
+    if: github.ref != 'refs/heads/main' && startsWith(github.ref, 'refs/tags/')
+    uses: oversizedev/GithubWorkflows/.github/workflows/release.yml@main
+    secrets: inherit

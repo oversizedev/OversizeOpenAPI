@@ -143,7 +143,7 @@ jobs:
 
   create-pr:
     name: Create API PR
-    # needs: [bundle, bump-version]
+    needs: [bundle, bump-version]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:

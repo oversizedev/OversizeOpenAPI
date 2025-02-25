@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: OversizeAPI
-  version: 0.3.0
+  version: 0.4.0
   description: API specification for Oversize applications
   contact:
     name: Oversize Team
@@ -9,7 +9,6 @@ info:
   license:
     name: MIT
     url: https://opensource.org/licenses/MIT
-
 servers:
   - url: https://api.oversize.app
     description: API url
@@ -17,7 +16,6 @@ servers:
     description: Test API url
   - url: https://cdn.oversize.app
     description: CDN url
-
 security:
   - ApiKeyAuth: []
 components:
@@ -26,31 +24,22 @@ components:
       type: apiKey
       in: header
       name: X-API-Key
-
 paths:
   /v1/apps:
     $ref: './paths/GetApps.yaml'
-
   /v1/app/{id}/features:
     $ref: './paths/GetAppFeatures.yaml'
-
   /v1/app/{id}/ads:
     $ref: './paths/GetAppAds.yaml'
-
   /v1/app/{id}/ad:
     $ref: './paths/GetAppAd.yaml'
-
   /v1/app/{id}/app-store/productIds:
     $ref: "./paths/GetAppStoreProductIds.yaml"
-
   /v1/feature/{id}:
     $ref: './paths/GetAppFeature.yaml'
-
   /v1/sale-offers:
     $ref: './paths/GetSaleOffers.yaml'
-
   /v1/health-check:
     $ref: './paths/GetHealthCheck.yaml'
-
   /v1/config/info.json:
     $ref: './paths/GetInfo.yaml'

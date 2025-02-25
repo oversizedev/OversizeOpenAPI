@@ -2,16 +2,22 @@ openapi: 3.1.0
 info:
   title: OversizeAPI
   version: 0.3.0
-  description: API specification for Oversize application features
+  description: API specification for Oversize applications
   contact:
     name: Oversize Team
     url: https://oversize.app
   license:
     name: MIT
     url: https://opensource.org/licenses/MIT
+
 servers:
   - url: https://api.oversize.app
     description: API url
+  - url: https://test.api.oversize.app
+    description: Test API url
+  - url: https://cdn.oversize.app
+    description: CDN url
+
 security:
   - ApiKeyAuth: []
 components:
@@ -20,20 +26,31 @@ components:
       type: apiKey
       in: header
       name: X-API-Key
+
 paths:
+  /v1/apps:
+    $ref: './paths/GetApps.yaml'
+
   /v1/app/{id}/features:
     $ref: './paths/GetAppFeatures.yaml'
-  /v1/app/{id}/features/premium:
-    $ref: './paths/GetAppFeaturesPremium.yaml'
-  /v1/app/{id}/features/onboarding:
-    $ref: './paths/GetAppFeaturesOnboarding.yaml'
+
   /v1/app/{id}/ads:
     $ref: './paths/GetAppAds.yaml'
+
   /v1/app/{id}/ad:
     $ref: './paths/GetAppAd.yaml'
-  /v1/app/{id}/subscriptions/ids:
-    $ref: "./paths/GetAppSubscriptionIds.yaml"
+
+  /v1/app/{id}/app-store/productIds:
+    $ref: "./paths/GetAppStoreProductIds.yaml"
+
   /v1/feature/{id}:
     $ref: './paths/GetAppFeature.yaml'
+
+  /v1/sale-offers:
+    $ref: './paths/GetSaleOffers.yaml'
+
   /v1/health-check:
     $ref: './paths/GetHealthCheck.yaml'
+
+  /v1/config/info.json:
+    $ref: './paths/GetInfo.yaml'

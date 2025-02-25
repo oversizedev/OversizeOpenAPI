@@ -5,8 +5,8 @@ required:
   - description
 properties:
   id:
-    type: string
-    example: '6443709281'
+    type: integer
+    example: 6443709281
   title:
     type: string
     example: Control weight easily, follow the successes of every month
@@ -15,6 +15,7 @@ properties:
     example: Control weight easily, follow the successes of every month
   iconURL:
     type: string
+    format: url
   priority:
     type: integer
     example: 1

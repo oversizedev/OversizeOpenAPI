@@ -1,0 +1,19 @@
+type: object
+required:
+  - id
+  - title
+  - url
+  - iconUrl
+properties:
+  title:
+    type: string
+    example: facebook
+  id:
+    type: string
+    example: aromanov91
+  url:
+    type: string
+    example: https://www.facebook.com/aromanov91
+  iconUrl:
+    type: string
+    example: https://cdn.oversize.design/assets/icons/brands/dribbble.svg

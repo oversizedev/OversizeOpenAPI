@@ -1,0 +1,27 @@
+get:
+  operationId: getApps
+  summary: Retrieve applications
+  description: Get all app
+  tags:
+    - apps
+  security:
+    - ApiKeyAuth: []
+  responses:
+    '200':
+      description: A success response
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '../schemas/App.yaml'
+    '500':
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Internal server error"

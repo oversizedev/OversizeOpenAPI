@@ -1,7 +1,9 @@
 get:
-  operationId: getAppFeaturesOnboarding
-  summary: Retrieve application onboarding features
-  description: Get all onboarding features associated with a specific application
+  operationId: GetAppStoreProductIds
+  summary: Retrieve application App Store products ids
+  description: Get all subscription ids associated with a specific application
+  tags:
+    - appStore
   security:
     - ApiKeyAuth: []
   parameters:
@@ -20,9 +22,9 @@ get:
           schema:
             type: array
             items:
-              $ref: '../schemas/Feature.yaml'
+              type: string
     '404':
-      description: Application features not found
+      description: Application not found
       content:
         application/json:
           schema:
@@ -30,7 +32,7 @@ get:
             properties:
               error:
                 type: string
-                example: "Application features not found"
+                example: "Application not found"
     '500':
       description: Internal server error
       content:

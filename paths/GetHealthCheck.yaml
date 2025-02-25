@@ -1,6 +1,8 @@
 get:
   summary: Health Check
   description: Endpoint to check the health of the service
+  tags:
+    - other
   responses:
     '200':
       description: Service is healthy

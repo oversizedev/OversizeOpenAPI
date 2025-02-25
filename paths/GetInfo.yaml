@@ -1,0 +1,12 @@
+get:
+  tags:
+    - cdn
+  summary: Fetch info
+  operationId: fetchInfo
+  responses:
+    '200':
+      description: Successful operation
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/Info.yaml'

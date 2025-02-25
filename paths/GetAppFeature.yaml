@@ -2,6 +2,8 @@ get:
   operationId: getAppFeature
   summary: Retrieve application features
   description: Get all features associated with a specific application
+  tags:
+    - features
   security:
     - ApiKeyAuth: []
   parameters:

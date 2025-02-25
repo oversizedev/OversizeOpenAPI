@@ -2,6 +2,8 @@ get:
   operationId: getAppAd
   summary: Retrieve application ad
   description: Get ad associated with a specific application
+  tags:
+    - ads
   security:
     - ApiKeyAuth: []
   parameters:

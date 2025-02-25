@@ -1,0 +1,46 @@
+type: object
+required:
+  - id
+  - title
+  - startDate
+  - endDate
+properties:
+  id:
+    type: integer
+    example: 01
+  badge:
+    type: string
+    example: Special Offer
+  title:
+    type: string
+    example: Get <salePercent>% OFF
+  headline:
+    type: string
+    example: It is very difficult to reset everything
+  description:
+    type: string
+    example: Get up to <salePercent>% off for <subscriptionName> subscription
+      and Free full access for <freeDays> days
+  imageURL:
+    type: string
+    format: url
+  startDate:
+    type: string
+    example: '2023-11-24T00:00:00Z'
+    format: date-time
+  endDate:
+    type: string
+    example: '2023-11-26T23:59:59Z'
+    format: date-time
+  accentColor:
+    type: string
+    example: F53C6E
+  effect:
+    type: string
+    example: snow
+    enum:
+      - snow
+  region:
+    type: array
+    items:
+      type: string

@@ -2,6 +2,8 @@ get:
   operationId: getAppFeatures
   summary: Retrieve application features
   description: Get all features associated with a specific application
+  tags:
+    - features
   security:
     - ApiKeyAuth: []
   parameters:
@@ -12,6 +14,16 @@ get:
       schema:
         type: integer
         example: 001
+    - name: filter
+      required: false
+      in: query
+      description: Filter features
+      schema:
+        type: string
+        enum:
+          - premium
+          - onboarding
+        example: premium
   responses:
     '200':
       description: A success response

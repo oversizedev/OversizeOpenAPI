@@ -1,0 +1,52 @@
+  required:
+    - developer
+    - company
+  properties:
+    developer:
+      required:
+        - email
+        - name
+        - socialNetworks
+        - url
+      properties:
+        email:
+          type: string
+          example: alexander@oversize.app
+        name:
+          type: string
+          example: Alexander Romanov
+        socialNetworks:
+          items:
+            $ref: '../schemas/SocialNetworkLink.yaml'
+        url:
+          type: string
+          example: https://romanov.cc
+      type: object
+    company:
+      required:
+        - name
+        - url
+        - email
+        - socialNetworks
+        - supportEmail
+      properties:
+        name:
+          type: string
+          example: Oversize
+        url:
+          type: string
+          format: url
+          example: https://oversize.app
+        email:
+          type: string
+          example: support@oversize.design
+        supportEmail:
+          type: string
+          example: support@oversize.design
+        appStoreId:
+          type: string
+          example: '1459928735'
+        socialNetworks:
+          items:
+            $ref: '../schemas/SocialNetworkLink.yaml'
+      type: object

@@ -1,0 +1,19 @@
+required:
+  - email
+  - name
+  - socialNetworks
+  - url
+properties:
+  email:
+    type: string
+    example: alexander@oversize.app
+  name:
+    type: string
+    example: Alexander Romanov
+  socialNetworks:
+    items:
+      $ref: '../schemas/SocialNetworkLink.yaml'
+  url:
+    type: string
+    example: https://romanov.cc
+type: object

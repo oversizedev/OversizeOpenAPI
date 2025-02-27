@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: OversizeAPI
-  version: 0.4.0
+  version: 0.5.0
   description: API specification for Oversize applications
   contact:
     name: Oversize Team
@@ -14,8 +14,6 @@ servers:
     description: API url
   - url: https://test.api.oversize.app
     description: Test API url
-  - url: https://cdn.oversize.app
-    description: CDN url
 security:
   - ApiKeyAuth: []
 paths:
@@ -47,7 +45,51 @@ paths:
                   error:
                     type: string
                     example: Internal server error
-  /v1/app/{id}/features:
+  /v1/apps/{id}:
+    get:
+      operationId: getApp
+      summary: Retrieve application
+      description: Get App Information
+      tags:
+        - apps
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: id
+          required: true
+          in: path
+          description: The application id used in the returned feature
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: A success response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App'
+        '404':
+          description: Feature not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: App not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+  /v1/apps/{id}/features:
     get:
       operationId: getAppFeatures
       summary: Retrieve application features
@@ -103,7 +145,7 @@ paths:
                   error:
                     type: string
                     example: Internal server error
-  /v1/app/{id}/ads:
+  /v1/apps/{id}/ads:
     get:
       operationId: getAppAds
       summary: Retrieve application ads
@@ -149,7 +191,7 @@ paths:
                   error:
                     type: string
                     example: Internal server error
-  /v1/app/{id}/ad:
+  /v1/apps/{id}/ad:
     get:
       operationId: getAppAd
       summary: Retrieve application ad
@@ -193,13 +235,13 @@ paths:
                   error:
                     type: string
                     example: Internal server error
-  /v1/app/{id}/app-store/productIds:
+  /v1/apps/{id}/app-store/productIds:
     get:
       operationId: GetAppStoreProductIds
       summary: Retrieve application App Store products ids
       description: Get all subscription ids associated with a specific application
       tags:
-        - appStore
+        - apps
       security:
         - ApiKeyAuth: []
       parameters:
@@ -239,7 +281,7 @@ paths:
                   error:
                     type: string
                     example: Internal server error
-  /v1/feature/{id}:
+  /v1/features/{id}:
     get:
       operationId: getAppFeature
       summary: Retrieve application features
@@ -301,6 +343,19 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/SaleOffer'
+  /v1/infos:
+    get:
+      tags:
+        - cdn
+      summary: Fetch info
+      operationId: fetchInfo
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Info'
   /v1/health-check:
     get:
       summary: Health Check
@@ -331,19 +386,6 @@ paths:
                   status:
                     type: string
                     example: down
-  /v1/config/info.json:
-    get:
-      tags:
-        - cdn
-      summary: Fetch info
-      operationId: fetchInfo
-      responses:
-        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Info'
 components:
   securitySchemes:
     ApiKeyAuth:
@@ -533,56 +575,60 @@ components:
         iconUrl:
           type: string
           example: https://cdn.oversize.design/assets/icons/brands/dribbble.svg
+    DeveloperInfo:
+      required:
+        - email
+        - name
+        - socialNetworks
+        - url
+      properties:
+        email:
+          type: string
+          example: alexander@oversize.app
+        name:
+          type: string
+          example: Alexander Romanov
+        socialNetworks:
+          items:
+            $ref: '#/components/schemas/SocialNetworkLink'
+        url:
+          type: string
+          example: https://romanov.cc
+      type: object
+    CompanyInfo:
+      required:
+        - name
+        - url
+        - email
+        - socialNetworks
+        - supportEmail
+      properties:
+        name:
+          type: string
+          example: Oversize
+        url:
+          type: string
+          format: url
+          example: https://oversize.app
+        email:
+          type: string
+          example: support@oversize.design
+        supportEmail:
+          type: string
+          example: support@oversize.design
+        appStoreId:
+          type: string
+          example: '1459928735'
+        socialNetworks:
+          items:
+            $ref: '#/components/schemas/SocialNetworkLink'
+      type: object
     Info:
       required:
         - developer
         - company
       properties:
         developer:
-          required:
-            - email
-            - name
-            - socialNetworks
-            - url
-          properties:
-            email:
-              type: string
-              example: alexander@oversize.app
-            name:
-              type: string
-              example: Alexander Romanov
-            socialNetworks:
-              items:
-                $ref: '#/components/schemas/SocialNetworkLink'
-            url:
-              type: string
-              example: https://romanov.cc
-          type: object
+          $ref: '#/components/schemas/DeveloperInfo'
         company:
-          required:
-            - name
-            - url
-            - email
-            - socialNetworks
-            - supportEmail
-          properties:
-            name:
-              type: string
-              example: Oversize
-            url:
-              type: string
-              format: url
-              example: https://oversize.app
-            email:
-              type: string
-              example: support@oversize.design
-            supportEmail:
-              type: string
-              example: support@oversize.design
-            appStoreId:
-              type: string
-              example: '1459928735'
-            socialNetworks:
-              items:
-                $ref: '#/components/schemas/SocialNetworkLink'
-          type: object
+          $ref: '#/components/schemas/CompanyInfo'

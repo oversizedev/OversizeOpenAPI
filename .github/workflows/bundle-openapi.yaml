@@ -141,9 +141,11 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
 
-  create-pr:
+  create-api-pr:
     name: Create API PR
-    needs: [bundle, bump-version]
+    needs:
+      - bundle
+      - bump-version
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
@@ -215,6 +217,88 @@ jobs:
           BRANCH_NAME="openapi/spec-${{ needs.bump-version.outputs.new_version }}"
           gh pr create \
             --repo oversizedev/OversizeAPI \
+            --title "Update OpenAPI specification to ${{ needs.bump-version.outputs.new_version }}" \
+            --body "Automated update from ${{ github.repository }}. Changes include ${{ needs.bump-version.outputs.new_version }} OpenAPI specification updates" \
+            --base main \
+            --head $BRANCH_NAME \
+            --label open-api
+
+  create-network-pr:
+    name: Create Network PR
+    needs:
+      - bundle
+      - bump-version
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Checkout Source Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Checkout Target Repository
+        uses: actions/checkout@v4
+        with:
+          repository: oversizedev/OversizeNetwork
+          token: ${{ secrets.ACTIONS_TOKEN }}
+          path: target_repo
+          fetch-depth: 1
+          ref: main
+
+      - name: Download bundle artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: bundle
+          path: bundle
+
+      - name: Configure Git in Target Repository
+        run: |
+          cd target_repo
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+      - name: Create and Switch to Feature Branch
+        run: |
+          cd target_repo
+          BRANCH_NAME="openapi/spec-${{ needs.bump-version.outputs.new_version }}"
+          git checkout -b $BRANCH_NAME
+          
+      - name: Copy Updated Files
+        run: |
+          cp -v bundle/openapi.yaml target_repo/Sources/OversizeNetwork/
+          cd target_repo
+          
+      - name: Check for Changes
+        id: check-changes
+        run: |
+          cd target_repo
+          git add .
+          if ! git diff --staged --quiet; then
+            echo "changes_detected=true" >> $GITHUB_OUTPUT
+          else
+            echo "changes_detected=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit and Push Changes
+        if: steps.check-changes.outputs.changes_detected == 'true'
+        run: |
+          cd target_repo
+          BRANCH_NAME="openapi/spec-${{ needs.bump-version.outputs.new_version }}"
+          git commit -m "Update OpenAPI specification"
+          git push -u origin $BRANCH_NAME
+
+      - name: Create Pull Request
+        if: steps.check-changes.outputs.changes_detected == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.ACTIONS_TOKEN }}
+        run: |
+          cd target_repo
+          BRANCH_NAME="openapi/spec-${{ needs.bump-version.outputs.new_version }}"
+          gh pr create \
+            --repo oversizedev/OversizeNetwork \
             --title "Update OpenAPI specification to ${{ needs.bump-version.outputs.new_version }}" \
             --body "Automated update from ${{ github.repository }}. Changes include ${{ needs.bump-version.outputs.new_version }} OpenAPI specification updates" \
             --base main \

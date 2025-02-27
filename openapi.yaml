@@ -14,8 +14,6 @@ servers:
     description: API url
   - url: https://test.api.oversize.app
     description: Test API url
-  - url: https://cdn.oversize.app
-    description: CDN url
 security:
   - ApiKeyAuth: []
 components:
@@ -27,19 +25,21 @@ components:
 paths:
   /v1/apps:
     $ref: './paths/GetApps.yaml'
-  /v1/app/{id}/features:
+  /v1/apps/{id}:
+    $ref: './paths/GetApp.yaml'
+  /v1/apps/{id}/features:
     $ref: './paths/GetAppFeatures.yaml'
-  /v1/app/{id}/ads:
+  /v1/apps/{id}/ads:
     $ref: './paths/GetAppAds.yaml'
-  /v1/app/{id}/ad:
+  /v1/apps/{id}/ad:
     $ref: './paths/GetAppAd.yaml'
-  /v1/app/{id}/app-store/productIds:
+  /v1/apps/{id}/app-store/productIds:
     $ref: "./paths/GetAppStoreProductIds.yaml"
-  /v1/feature/{id}:
+  /v1/features/{id}:
     $ref: './paths/GetAppFeature.yaml'
   /v1/sale-offers:
     $ref: './paths/GetSaleOffers.yaml'
+  /v1/infos:
+    $ref: './paths/GetInfos.yaml'
   /v1/health-check:
     $ref: './paths/GetHealthCheck.yaml'
-  /v1/config/info.json:
-    $ref: './paths/GetInfo.yaml'

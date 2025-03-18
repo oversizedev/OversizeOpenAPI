@@ -14,15 +14,29 @@ get:
       schema:
         type: integer
         example: 001
-    - name: filter
+    - name: context
       required: false
       in: query
-      description: Filter features
+      description: Filter features by context
       schema:
         type: string
         enum:
-          - premium
+          - paywall
           - onboarding
+        example: paywall
+    - name: platform
+      required: false
+      in: query
+      description: Filter features by platform
+      schema:
+        type: string
+        enum:
+          - iOS
+          - macOS
+          - tvOS
+          - watchOS
+          - visionOS
+          - web
         example: premium
   responses:
     '200':

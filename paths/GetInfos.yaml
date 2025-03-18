@@ -1,6 +1,6 @@
 get:
   tags:
-    - cdn
+    - infos
   summary: Fetch info
   operationId: fetchInfo
   responses:

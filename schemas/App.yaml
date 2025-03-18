@@ -7,7 +7,7 @@ required:
   - termsDate
 properties:
   id:
-    type: integer
+    type: string
     example: 1661200390
   name:
     type: string
@@ -30,7 +30,7 @@ properties:
     example: calendardo
   termsDate:
     type: string
-    example: '2022-12-31'
+    example: 2022-12-31
     format: date
   termsAdditions:
     type: array

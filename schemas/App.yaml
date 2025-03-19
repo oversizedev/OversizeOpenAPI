@@ -36,3 +36,6 @@ properties:
     type: array
     items:
       type: string
+  platforms:
+    items:
+      $ref: '../schemas/Platform.yaml'

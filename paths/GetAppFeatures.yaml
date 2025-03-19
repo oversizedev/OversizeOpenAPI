@@ -37,7 +37,7 @@ get:
           - watchOS
           - visionOS
           - web
-        example: premium
+        example: iOS
   responses:
     '200':
       description: A success response

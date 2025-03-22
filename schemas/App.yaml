@@ -9,6 +9,10 @@ properties:
   id:
     type: string
     example: 1661200390
+  iconUrl:
+    type: string
+    format: url
+    example: https://oversize.app/assets/icons/apps/calendardo.png
   name:
     type: string
     example: Calendar Do
@@ -38,4 +42,4 @@ properties:
       type: string
   platforms:
     items:
-      $ref: '../schemas/Platform.yaml'
+      $ref: './Platform.yaml'

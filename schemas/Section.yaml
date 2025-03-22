@@ -1,0 +1,38 @@
+type: object
+required:
+  - id
+  - title
+  - type
+  - items
+properties:
+  id:
+    type: integer
+    example: 100
+  type:
+    type: string
+    example: cards
+    enum:
+      - grid
+      - list
+  title:
+    type: string
+    example: Features
+  subtitle:
+    type: string
+    example: Amazing features
+  description:
+    type: string
+    example: All data is saved in the phone or is possible synchronization with iCloud
+  color:
+    type: string
+    example: F53C6E
+  gridColumns:
+    type: integer
+    example: 1
+  screenshotUrl:
+    type: string
+    format: uri
+    example: https://cdn.oversize.design/assets/apps/dressweather/screenshots/1.png
+  features:
+    items:
+      $ref: './Feature.yaml'

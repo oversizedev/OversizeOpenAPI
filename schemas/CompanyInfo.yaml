@@ -23,5 +23,5 @@ properties:
     example: '1459928735'
   socialNetworks:
     items:
-      $ref: '../schemas/SocialNetworkLink.yaml'
+      $ref: './SocialNetworkLink.yaml'
 type: object

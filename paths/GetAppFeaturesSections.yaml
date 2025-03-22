@@ -1,28 +1,37 @@
 get:
-  operationId: getApp
-  summary: Retrieve application
-  description: Get App Information
+  operationId: getAppFeaturesSections
+  summary: Retrieve application features sections
+  description: Get all features associated with a specific application
   tags:
-    - apps
+    - features
   security:
     - ApiKeyAuth: []
   parameters:
-    - name: id
-      required: true
-      in: path
-      description: The application id used in the returned feature
+    - name: platform
+      required: false
+      in: query
+      description: Filter features by platform
       schema:
         type: string
-        example: 001
+        enum:
+          - iOS
+          - macOS
+          - tvOS
+          - watchOS
+          - visionOS
+          - web
+        example: iOS
   responses:
     '200':
       description: A success response
       content:
         application/json:
           schema:
-            $ref: '../schemas/App.yaml'
+            type: array
+            items:
+              $ref: '../schemas/Section.yaml'
     '404':
-      description: Feature not found
+      description: Application not found
       content:
         application/json:
           schema:
@@ -30,7 +39,7 @@ get:
             properties:
               error:
                 type: string
-                example: "App not found"
+                example: "Application features not found"
     '500':
       description: Internal server error
       content:

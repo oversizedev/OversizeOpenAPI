@@ -7,13 +7,6 @@ get:
   security:
     - ApiKeyAuth: []
   parameters:
-    - name: id
-      required: true
-      in: path
-      description: The application id used in the returned features
-      schema:
-        type: integer
-        example: 001
     - name: context
       required: false
       in: query

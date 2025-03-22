@@ -12,8 +12,8 @@ get:
       in: path
       description: The application id used in the returned feature
       schema:
-        type: integer
-        example: 001
+        type: string
+        example: 1000000
   responses:
     '200':
       description: A success response

@@ -29,6 +29,8 @@ paths:
     $ref: './paths/GetApp.yaml'
   /v1/apps/{id}/features:
     $ref: './paths/GetAppFeatures.yaml'
+  /v1/apps/{id}/features/sections:
+    $ref: './paths/getAppFeaturesSections.yaml'
   /v1/apps/{id}/ads:
     $ref: './paths/GetAppAds.yaml'
   /v1/apps/{id}/ad:

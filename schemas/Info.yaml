@@ -3,6 +3,6 @@ required:
   - company
 properties:
   developer:
-    $ref: './DeveloperInfo.yaml'
+    $ref: './Developer.yaml'
   company:
-    $ref: './CompanyInfo.yaml'
+    $ref: './Company.yaml'

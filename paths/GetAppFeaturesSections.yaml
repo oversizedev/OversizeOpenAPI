@@ -1,6 +1,6 @@
 get:
-  operationId: getAppFeatures
-  summary: Retrieve application features
+  operationId: getAppFeaturesSections
+  summary: Retrieve application features sections
   description: Get all features associated with a specific application
   tags:
     - features
@@ -10,20 +10,10 @@ get:
     - name: id
       required: true
       in: path
-      description: The application id used in the returned features
+      description: The application id used in the returned feature
       schema:
         type: string
-        example: 10000000
-    - name: context
-      required: false
-      in: query
-      description: Filter features by context
-      schema:
-        type: string
-        enum:
-          - paywall
-          - onboarding
-        example: paywall
+        example: 001
     - name: platform
       required: false
       in: query
@@ -46,7 +36,7 @@ get:
           schema:
             type: array
             items:
-              $ref: '../schemas/Feature.yaml'
+              $ref: '../schemas/Section.yaml'
     '404':
       description: Application not found
       content:

@@ -12,7 +12,7 @@ get:
       in: path
       description: The application id used in the returned features
       schema:
-        type: integer
+        type: string
         example: 001
   responses:
     '200':

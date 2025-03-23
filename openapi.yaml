@@ -30,7 +30,7 @@ paths:
   /v1/apps/{id}/features:
     $ref: './paths/GetAppFeatures.yaml'
   /v1/apps/{id}/features/sections:
-    $ref: './paths/getAppFeaturesSections.yaml'
+    $ref: './paths/GetAppFeaturesSections.yaml'
   /v1/apps/{id}/ads:
     $ref: './paths/GetAppAds.yaml'
   /v1/apps/{id}/ad:

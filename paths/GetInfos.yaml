@@ -10,3 +10,13 @@ get:
         application/json:
           schema:
             $ref: '../schemas/Info.yaml'
+    '400':
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Bad request"

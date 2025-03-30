@@ -6,7 +6,7 @@ required:
   - textSize
 properties:
   id:
-    type: integer
+    type: string
     description: Computed identifier from image, title, and subtitle
   title:
     type: string

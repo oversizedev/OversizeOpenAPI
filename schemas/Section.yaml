@@ -3,7 +3,7 @@ required:
   - id
   - title
   - type
-  - items
+  - features
 properties:
   id:
     type: integer
@@ -34,5 +34,6 @@ properties:
     format: uri
     example: https://cdn.oversize.design/assets/apps/dressweather/screenshots/1.png
   features:
+    type: array
     items:
       $ref: './Feature.yaml'

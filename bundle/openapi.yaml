@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: OversizeAPI
-  version: 0.8.0
+  version: 0.9.0
   description: API specification for Oversize applications
   contact:
     name: Oversize Team
@@ -365,6 +365,50 @@ paths:
                   error:
                     type: string
                     example: Internal server error
+  /v1/apps/{id}/app-store/products:
+    get:
+      operationId: GetAppStoreProducts
+      summary: Retrieve application App Store products
+      description: Get all subscription ids associated with a specific application
+      tags:
+        - app-store
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: id
+          required: true
+          in: path
+          description: The application id used in the returned features
+          schema:
+            type: string
+            example: 1
+      responses:
+        '200':
+          description: A success response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppStoreProducts'
+        '404':
+          description: Application not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Application not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
   /v1/features/{id}:
     get:
       operationId: getAppFeature
@@ -577,7 +621,7 @@ components:
         - textSize
       properties:
         id:
-          type: integer
+          type: string
           description: Computed identifier from image, title, and subtitle
         title:
           type: string
@@ -639,7 +683,7 @@ components:
         - id
         - title
         - type
-        - items
+        - features
       properties:
         id:
           type: integer
@@ -670,6 +714,7 @@ components:
           format: uri
           example: https://cdn.oversize.design/assets/apps/dressweather/screenshots/1.png
         features:
+          type: array
           items:
             $ref: '#/components/schemas/Feature'
     Ad:
@@ -694,6 +739,34 @@ components:
         priority:
           type: integer
           example: 1
+    AppStoreBanner:
+      type: object
+      required:
+        - id
+        - title
+        - description
+      properties:
+        id:
+          type: integer
+          example: 6443709281
+        title:
+          type: string
+          example: Control weight easily, follow the successes of every month
+        description:
+          type: string
+          example: Control weight easily, follow the successes of every month
+    AppStoreProducts:
+      required:
+        - productIds
+        - banner
+      properties:
+        productIds:
+          type: array
+          items:
+            type: string
+        banner:
+          $ref: '#/components/schemas/AppStoreBanner'
+      type: object
     SaleOffer:
       type: object
       required:

@@ -37,6 +37,8 @@ paths:
     $ref: './paths/GetAppAd.yaml'
   /v1/apps/{id}/app-store/productIds:
     $ref: "./paths/GetAppStoreProductIds.yaml"
+  /v1/apps/{id}/app-store/products:
+    $ref: "./paths/GetAppStoreProducts.yaml"
   /v1/features/{id}:
     $ref: './paths/GetAppFeature.yaml'
   /v1/sale-offers:

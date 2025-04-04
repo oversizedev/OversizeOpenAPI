@@ -20,15 +20,5 @@ get:
                 example: "up"
             required:
               - status
-    '500':
-      description: Service is not healthy
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              status:
-                type: string
-                example: "down"
-            required:
-              - status
+    '400':
+      $ref: '../../components/responses/error/BadRequest.yaml'

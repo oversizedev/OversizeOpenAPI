@@ -1,7 +1,7 @@
 get:
+  summary: Get App Information
+  description: Retrieve application
   operationId: getApp
-  summary: Retrieve application
-  description: Get App Information
   tags:
     - apps
   security:
@@ -10,7 +10,7 @@ get:
     - $ref: '../../components/parameters/AppId.yaml'
   responses:
     '200':
-      ref: '../../components/responses/app/AppResponse.yaml'
+      $ref: '../../components/responses/app/AppResponse.yaml'
     '404':
       $ref: '../../components/responses/error/NotFound.yaml'
     '500':

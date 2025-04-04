@@ -1,8 +1,9 @@
 # App Response - Single application object
 type: object
+description: Application
 required:
   - app
 properties:
   app:
-    description: Single application details
     $ref: '../../schemas/app/App.yaml'
+    description: Single application details

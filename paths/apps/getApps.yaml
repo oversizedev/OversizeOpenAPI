@@ -1,7 +1,7 @@
 get:
-  operationId: getApps
   summary: List all applications
   description: Retrieves a list of all applications
+  operationId: getApps
   tags:
     - apps
   parameters:

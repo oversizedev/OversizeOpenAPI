@@ -1,16 +1,17 @@
 get:
-  summary: Get App Information
-  description: Retrieve application
-  operationId: getApp
+  operationId: getAppAd
+  summary: Get ad associated with a specific application
+  description: Retrieve application ad
   tags:
-    - apps
+    - ads
   security:
     - ApiKeyAuth: []
   parameters:
     - $ref: '../../components/parameters/AppId.yaml'
+    - $ref: '../../components/parameters/Platforms.yaml'
   responses:
     '200':
-      $ref: '../../components/responses/app/AppResponse.yaml'
+      $ref: '../../components/responses/ad/AdsRespose.yaml'
     '400':
       $ref: '../../components/responses/error/BadRequest.yaml'
     '404':

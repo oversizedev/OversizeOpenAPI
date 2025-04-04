@@ -1,0 +1,8 @@
+# Feature ID parameter - Used to identify specific applications
+name: id
+in: path
+required: true
+description: Feature ID
+schema:
+  type: string
+  example: "1"

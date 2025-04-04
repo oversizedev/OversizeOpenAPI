@@ -1,0 +1,30 @@
+get:
+  operationId: getAppFeatures
+  summary: Retrieve application features
+  description: Get all features associated with a specific application
+  tags:
+    - apps
+  security:
+    - ApiKeyAuth: []
+  parameters:
+    - $ref: '../../components/parameters/AppId.yaml'
+    - $ref: '../../components/parameters/Platforms.yaml'
+    - name: context
+      required: false
+      in: query
+      description: Filter features by context
+      schema:
+        type: string
+        enum:
+          - paywall
+          - onboarding
+        example: paywall
+  responses:
+    '200':
+      $ref: '../../components/responses/feature/FeaturesResponse.yaml'
+    '400':
+      $ref: '../../components/responses/error/BadRequest.yaml'
+    '404':
+      $ref: '../../components/responses/error/NotFound.yaml'
+    '500':
+      $ref: '../../components/responses/error/InternalServerError.yaml'

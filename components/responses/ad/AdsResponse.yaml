@@ -1,0 +1,14 @@
+description: List of ads
+content:
+  application/json:
+    schema:
+      type: object
+      description: List of ads
+      required:
+        - ads
+      properties:
+        ads:
+          type: array
+          description: Collection of ads
+          items:
+            $ref: '../../schemas/ad/Ad.yaml'

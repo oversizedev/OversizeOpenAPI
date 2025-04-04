@@ -1,0 +1,14 @@
+description: Info
+content:
+  application/json:
+    schema:
+      type: object
+      description: Info
+      required:
+        - developer
+        - company
+      properties:
+        developer:
+          $ref: '../../schemas/info/Developer.yaml'
+        company:
+          $ref: '../../schemas/info/Company.yaml'

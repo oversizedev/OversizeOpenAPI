@@ -1,8 +1,0 @@
-required:
-  - developer
-  - company
-properties:
-  developer:
-    $ref: './Developer.yaml'
-  company:
-    $ref: './Company.yaml'

@@ -1,16 +1,17 @@
 get:
-  summary: Get App Information
-  description: Retrieve application
-  operationId: getApp
+  operationId: getAppFeaturesSections
+  summary: Retrieve application features sections
+  description: Get all features associated with a specific application
   tags:
     - apps
   security:
     - ApiKeyAuth: []
   parameters:
     - $ref: '../../components/parameters/AppId.yaml'
+    - $ref: '../../components/parameters/Platforms.yaml'
   responses:
     '200':
-      $ref: '../../components/responses/app/AppResponse.yaml'
+      $ref: '../../components/responses/feature/SectionsResponse.yaml'
     '400':
       $ref: '../../components/responses/error/BadRequest.yaml'
     '404':

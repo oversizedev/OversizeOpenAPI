@@ -1,0 +1,12 @@
+get:
+  tags:
+    - infos
+  summary: Fetch info
+  operationId: getInfo
+  responses:
+    '200':
+      $ref: '../../components/responses/info/InfoResponse.yaml'
+    '400':
+      $ref: '../../components/responses/error/BadRequest.yaml'
+    '500':
+      $ref: '../../components/responses/error/InternalServerError.yaml'

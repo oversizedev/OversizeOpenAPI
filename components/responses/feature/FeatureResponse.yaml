@@ -1,0 +1,12 @@
+description: Feature
+content:
+  application/json:
+    schema:
+      type: object
+      description: Feature
+      required:
+        - features
+      properties:
+        feature:
+          $ref: '../../schemas/feature/Feature.yaml'
+          description: Single features details

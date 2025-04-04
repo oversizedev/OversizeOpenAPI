@@ -41,23 +41,23 @@ paths:
   /v1/apps/{id}:
     $ref: './paths/apps/getApp.yaml'
   /v1/apps/{id}/features:
-    $ref: './paths/GetAppFeatures.yaml'
+    $ref: './paths/apps/getAppFeatures.yaml'
   /v1/apps/{id}/features/sections:
-    $ref: './paths/GetAppFeaturesSections.yaml'
+    $ref: './paths/apps/getAppFeaturesSections.yaml'
   /v1/apps/{id}/ads:
-    $ref: './paths/GetAppAds.yaml'
+    $ref: './paths/apps/getAppAd.yaml'
   /v1/apps/{id}/ad:
-    $ref: './paths/GetAppAd.yaml'
+    $ref: './paths/ads/getAppAds.yaml'
   /v1/apps/{id}/app-store/productIds:
     $ref: "./paths/GetAppStoreProductIds.yaml"
   /v1/apps/{id}/app-store/products:
     $ref: "./paths/GetAppStoreProducts.yaml"
   /v1/features/{id}:
-    $ref: './paths/GetAppFeature.yaml'
+    $ref: './paths/features/getFeature.yaml'
   /v1/sale-offers:
     $ref: './paths/GetSaleOffers.yaml'
   /v1/infos:
-    $ref: './paths/GetInfos.yaml'
+    $ref: './paths/infos/getInfos.yaml'
   /v1/health-check:
     $ref: './paths/system/getHealthCheck.yaml'
 

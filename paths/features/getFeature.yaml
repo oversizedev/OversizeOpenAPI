@@ -1,16 +1,16 @@
 get:
-  summary: Get App Information
-  description: Retrieve application
-  operationId: getApp
+  summary: Get features
+  description: Retrieve features
+  operationId: getFeature
   tags:
-    - apps
+    - features
   security:
     - ApiKeyAuth: []
   parameters:
-    - $ref: '../../components/parameters/AppId.yaml'
+    - $ref: '../../components/parameters/FeatureId.yaml'
   responses:
     '200':
-      $ref: '../../components/responses/app/AppResponse.yaml'
+      $ref: '../../components/responses/feature/FeatureResponse.yaml'
     '400':
       $ref: '../../components/responses/error/BadRequest.yaml'
     '404':

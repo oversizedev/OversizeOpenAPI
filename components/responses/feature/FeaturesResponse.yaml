@@ -1,0 +1,14 @@
+description: List of features
+content:
+  application/json:
+    schema:
+      type: object
+      description: List of features
+      required:
+        - features
+      properties:
+        sections:
+          type: array
+          description: Collection of sections
+          features:
+            $ref: '../../schemas/feature/Feature.yaml'

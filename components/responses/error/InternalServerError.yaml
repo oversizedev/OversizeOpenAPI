@@ -1,0 +1,10 @@
+# Internal server error response - 500 error
+description: Internal server error
+content:
+  application/json:
+    schema:
+      $ref: '../../schemas/error/ErrorResponse.yaml'
+    example:
+      error: "validation_error"
+      code: "invalid_parameter"
+      message: "Internal server error"

@@ -1,3 +1,4 @@
+type: object
 required:
   - id
   - name
@@ -8,20 +9,20 @@ required:
 properties:
   id:
     type: string
-    example: 1661200390
+    example: "1661200390"
   iconUrl:
     type: string
     format: url
-    example: https://oversize.app/assets/icons/apps/calendardo.png
+    example: "https://oversize.app/assets/icons/apps/calendardo.png"
   name:
     type: string
-    example: Calendar Do
+    example: "Calendar Do"
   title:
     type: string
-    example: Add tasks to meetings
+    example: "Add tasks to meetings"
   subtitle:
     type: string
-    example: All your meetings on a simple list
+    example: "All your meetings on a simple list"
   description:
     type: string
     example: >-
@@ -31,15 +32,24 @@ properties:
       of tasks
   address:
     type: string
-    example: calendardo
+    example: "calendardo"
   termsDate:
     type: string
-    example: 2022-12-31
     format: date
+    example: "2022-12-31"
   termsAdditions:
     type: array
     items:
       type: string
   platforms:
+    type: array
     items:
-      $ref: './Platform.yaml'
+      $ref: './PlatformType.yaml'
+  createdAt:
+    type: string
+    format: date-time
+    example: "2022-08-15T10:30:00Z"
+  updatedAt:
+    type: string
+    format: date-time
+    example: "2025-04-02T15:35:22Z"

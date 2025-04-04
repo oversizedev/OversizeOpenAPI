@@ -1,0 +1,8 @@
+# App ID parameter - Used to identify specific applications
+name: id
+in: path
+required: true
+description: Application ID
+schema:
+  type: string
+  example: "1661200390"

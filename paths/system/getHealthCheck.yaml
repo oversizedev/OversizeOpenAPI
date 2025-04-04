@@ -3,7 +3,7 @@ get:
   description: Endpoint to check the health of the service
   operationId: getHealthCheck
   tags:
-    - other
+    - system
   responses:
     '200':
       description: Service is healthy
@@ -18,16 +18,8 @@ get:
                   - up
                   - down
                 example: "up"
-    '400':
-      description: Bad request
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: "Bad request"
+            required:
+              - status
     '500':
       description: Service is not healthy
       content:
@@ -38,3 +30,5 @@ get:
               status:
                 type: string
                 example: "down"
+            required:
+              - status

@@ -2,31 +2,44 @@ openapi: 3.1.0
 info:
   title: OversizeAPI
   version: 0.9.0
-  description: API specification for Oversize applications
+  description:
+    $ref: ./descriptions/main.md
   contact:
     name: Oversize Team
     url: https://oversize.app
+    email: support@oversize.app
   license:
     name: MIT
     url: https://opensource.org/licenses/MIT
+
 servers:
   - url: https://api.oversize.app
-    description: API url
+    description: Production API
   - url: https://test.api.oversize.app
-    description: Test API url
+    description: Test API
+
 security:
   - ApiKeyAuth: []
-components:
-  securitySchemes:
-    ApiKeyAuth:
-      type: apiKey
-      in: header
-      name: X-API-Key
+
+tags:
+  - name: apps
+    description: Application-related endpoints
+  - name: features
+    description: Feature-related endpoints
+  - name: ads
+    description: Advertisement-related endpoints
+  - name: app-store
+    description: App Store integration endpoints
+  - name: info
+    description: Information-related endpoints
+  - name: system
+    description: System-related endpoints like health checks
+
 paths:
   /v1/apps:
-    $ref: './paths/GetApps.yaml'
+    $ref: './paths/apps/getApps.yaml'
   /v1/apps/{id}:
-    $ref: './paths/GetApp.yaml'
+    $ref: './paths/apps/getApp.yaml'
   /v1/apps/{id}/features:
     $ref: './paths/GetAppFeatures.yaml'
   /v1/apps/{id}/features/sections:
@@ -46,4 +59,9 @@ paths:
   /v1/infos:
     $ref: './paths/GetInfos.yaml'
   /v1/health-check:
-    $ref: './paths/GetHealthCheck.yaml'
+    $ref: './paths/system/getHealthCheck.yaml'
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      $ref: './components/securitySchemes/apiKeyAuth.yaml'

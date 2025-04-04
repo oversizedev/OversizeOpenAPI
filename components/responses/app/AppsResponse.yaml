@@ -1,0 +1,41 @@
+# Apps Response - Collection of application objects
+type: object
+description: List of applications
+required:
+  - apps
+properties:
+  apps:
+    type: array
+    description: Collection of applications
+    items:
+      $ref: '../../schemas/app/App.yaml'
+  example:
+    apps:
+      - id: "1661200390"
+        name: "Calendar Do"
+        title: "Add tasks to meetings"
+        subtitle: "All your meetings on a simple list"
+        address: "calendardo"
+        termsDate: "2022-12-31"
+        iconUrl: "https://oversize.app/assets/icons/apps/calendardo.png"
+        description: "A simple and convenient viewing of events from the calendar in the form of a list of tasks."
+        platforms:
+          - id: "iOS"
+            title: "iOS"
+          - id: "macOS"
+            title: "macOS"
+        createdAt: "2022-08-15T10:30:00Z"
+        updatedAt: "2025-04-02T15:35:22Z"
+      - id: "1842391042"
+        name: "Weight Tracker"
+        title: "Track your weight"
+        subtitle: "Simple weight tracking app"
+        address: "weighttracker"
+        termsDate: "2023-01-15"
+        iconUrl: "https://oversize.app/assets/icons/apps/weighttracker.png"
+        description: "A simple app to track your weight over time and visualize your progress."
+        platforms:
+          - id: "iOS"
+            title: "iOS"
+        createdAt: "2023-01-10T08:45:00Z"
+        updatedAt: "2025-04-01T16:20:45Z"

@@ -1,0 +1,17 @@
+get:
+  operationId: getApp
+  summary: Retrieve application
+  description: Get App Information
+  tags:
+    - apps
+  security:
+    - ApiKeyAuth: []
+  parameters:
+    - $ref: '../../components/parameters/AppId.yaml'
+  responses:
+    '200':
+      ref: '../../components/responses/app/AppResponse.yaml'
+    '404':
+      $ref: '../../components/responses/error/NotFound.yaml'
+    '500':
+      $ref: '../../components/responses/error/InternalServerError.yaml'

@@ -3,7 +3,7 @@ content:
   application/json:
     schema:
       type: object
-      description: List of features features
+      description: List of feature sections
       required:
         - mainSection
         - sections

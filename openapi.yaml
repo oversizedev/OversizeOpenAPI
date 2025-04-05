@@ -55,6 +55,9 @@ paths:
   /v1/health-check:
     $ref: './paths/system/getHealthCheck.yaml'
 components:
+  parameters:
+    AppVersion:
+      $ref: './components/parameters/AppVersion.yaml'
   securitySchemes:
     ApiKeyAuth:
       $ref: './components/securitySchemes/apiKeyAuth.yaml'

@@ -1,0 +1,7 @@
+name: X-App-Version
+in: header
+description: Client application version
+schema:
+  type: string
+  example: "1.2.3"
+required: true

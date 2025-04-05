@@ -23,10 +23,8 @@ content:
             iconUrl: "https://oversize.app/assets/icons/apps/calendardo.png"
             description: "A simple and convenient viewing of events from the calendar in the form of a list of tasks."
             platforms:
-              - id: "iOS"
-                title: "iOS"
-              - id: "macOS"
-                title: "macOS"
+              - "iOS"
+              - "macOS"
             createdAt: "2022-08-15T10:30:00Z"
             updatedAt: "2025-04-02T15:35:22Z"
           - id: "1842391042"

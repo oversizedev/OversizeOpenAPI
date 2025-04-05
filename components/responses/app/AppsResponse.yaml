@@ -36,7 +36,6 @@ content:
             iconUrl: "https://oversize.app/assets/icons/apps/weighttracker.png"
             description: "A simple app to track your weight over time and visualize your progress."
             platforms:
-              - id: "iOS"
-                title: "iOS"
+              - "iOS"
             createdAt: "2023-01-10T08:45:00Z"
             updatedAt: "2025-04-01T16:20:45Z"

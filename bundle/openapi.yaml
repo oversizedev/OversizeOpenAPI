@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: OversizeAPI
-  version: 1.0.0
+  version: 1.1.0
   description: |-
     # OversizeAPI
 
@@ -265,6 +265,39 @@ paths:
         '400':
           $ref: '#/components/responses/BadRequestResponse'
 components:
+  parameters:
+    AppVersion:
+      name: X-App-Version
+      in: header
+      description: Client application version
+      schema:
+        type: string
+        example: 1.2.3
+      required: true
+    Platforms:
+      name: platforms
+      in: query
+      description: Filter by platforms
+      schema:
+        type: array
+        items:
+          $ref: '#/components/schemas/PlatformType'
+    AppId:
+      name: id
+      in: path
+      required: true
+      description: Application ID
+      schema:
+        type: string
+        example: '1661200390'
+    FeatureId:
+      name: id
+      in: path
+      required: true
+      description: Feature ID
+      schema:
+        type: string
+        example: '1'
   securitySchemes:
     ApiKeyAuth:
       type: apiKey
@@ -611,31 +644,6 @@ components:
           items:
             $ref: '#/components/schemas/SocialNetwork'
       type: object
-  parameters:
-    Platforms:
-      name: platforms
-      in: query
-      description: Filter by platforms
-      schema:
-        type: array
-        items:
-          $ref: '#/components/schemas/PlatformType'
-    AppId:
-      name: id
-      in: path
-      required: true
-      description: Application ID
-      schema:
-        type: string
-        example: '1661200390'
-    FeatureId:
-      name: id
-      in: path
-      required: true
-      description: Feature ID
-      schema:
-        type: string
-        example: '1'
   responses:
     AppsResponse:
       description: List of applications

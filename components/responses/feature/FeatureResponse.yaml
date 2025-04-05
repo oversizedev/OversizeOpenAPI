@@ -9,4 +9,4 @@ content:
       properties:
         feature:
           $ref: '../../schemas/feature/Feature.yaml'
-          description: Single features details
+          description: Single feature details

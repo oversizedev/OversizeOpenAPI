@@ -1,0 +1,18 @@
+type: object
+required:
+  - id
+  - badge
+  - title
+properties:
+  id:
+    type: integer
+    example: 6443709281
+  badge:
+    type: string
+    example: Control weight easily, follow the successes of every month
+  title:
+    type: string
+    example: Control weight easily, follow the successes of every month
+  description:
+    type: string
+    example: Control weight easily, follow the successes of every month

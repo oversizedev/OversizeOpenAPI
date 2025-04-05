@@ -1,0 +1,8 @@
+# Platforms parameter - Used to identify specific applications
+name: platforms
+in: query
+description: Filter by platforms
+schema:
+  type: array
+  items:
+    $ref: './../schemas/common/PlatformType.yaml'

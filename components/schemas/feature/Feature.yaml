@@ -1,0 +1,64 @@
+type: object
+required:
+  - id
+  - title
+  - textAlignment
+  - textSize
+properties:
+  id:
+    type: string
+    description: Computed identifier from image, title, and subtitle
+  title:
+    type: string
+    description: Title of the store features
+    example: "Smart Weather Detection"
+  subtitle:
+    type: string
+    description: Subtitle of the store features
+    example: "Real-time weather updates"
+  description:
+    type: string
+    description: Description of the store features
+    example: "Get instant notifications about weather changes"
+  textSize:
+    type: string
+    enum:
+      - small
+      - medium
+      - large
+    example: "medium"
+    description: Size of the text content
+  textAlignment:
+    type: string
+    enum:
+      - leading
+      - center
+      - trailing
+    example: "center"
+    description: Alignment of the text content
+  iconUrl:
+    type: string
+    format: url
+    example: "https://cdn.oversize.design/assets/apps/dressweather/features/2.png"
+    description: URL for the features icon
+  illustrationUrl:
+    type: string
+    format: url
+    example: "https://cdn.oversize.design/assets/apps/dressweather/features/2.png"
+    description: URL for the features icon
+  screenshotUrl:
+    type: string
+    format: url
+    example: "https://cdn.oversize.design/assets/apps/dressweather/screenshots/1.png"
+    description: URL for the features screenshot
+  screenshotAlignment:
+    type: string
+    enum:
+      - top
+      - bottom
+    example: "top"
+    description: Vertical alignment of the screenshot
+  backgroundColor:
+    type: string
+    example: "ffffff"
+    description: Background color value in hex format without

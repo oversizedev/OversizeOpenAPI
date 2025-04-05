@@ -1,0 +1,15 @@
+get:
+  summary: List all applications
+  description: Retrieves a list of all applications
+  operationId: getApps
+  tags:
+    - apps
+  parameters:
+    - $ref: '../../components/parameters/Platforms.yaml'
+  responses:
+    '200':
+      $ref: '../../components/responses/app/AppsResponse.yaml'
+    '400':
+      $ref: '../../components/responses/error/BadRequestResponse.yaml'
+    '500':
+      $ref: '../../components/responses/error/InternalServerErrorResponse.yaml'

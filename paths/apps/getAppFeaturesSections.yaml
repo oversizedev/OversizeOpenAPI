@@ -1,0 +1,20 @@
+get:
+  operationId: getAppFeaturesSections
+  summary: Retrieve application features sections
+  description: Get all features associated with a specific application
+  tags:
+    - apps
+  security:
+    - ApiKeyAuth: []
+  parameters:
+    - $ref: '../../components/parameters/AppId.yaml'
+    - $ref: '../../components/parameters/Platforms.yaml'
+  responses:
+    '200':
+      $ref: '../../components/responses/section/SectionsResponse.yaml'
+    '400':
+      $ref: '../../components/responses/error/BadRequestResponse.yaml'
+    '404':
+      $ref: '../../components/responses/error/NotFoundResponse.yaml'
+    '500':
+      $ref: '../../components/responses/error/InternalServerErrorResponse.yaml'

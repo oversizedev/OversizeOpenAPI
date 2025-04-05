@@ -1,0 +1,10 @@
+# Not found response - 404 error
+description: Not found
+content:
+  application/json:
+    schema:
+      $ref: '../../schemas/error/Error.yaml'
+    example:
+      error: "validation_error"
+      code: "invalid_parameter"
+      message: "Not found"

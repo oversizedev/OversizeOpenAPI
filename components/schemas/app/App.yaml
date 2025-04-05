@@ -1,0 +1,55 @@
+type: object
+required:
+  - id
+  - name
+  - title
+  - subtitle
+  - address
+  - termsDate
+properties:
+  id:
+    type: string
+    example: "1661200390"
+  iconUrl:
+    type: string
+    format: url
+    example: "https://oversize.app/assets/icons/apps/calendardo.png"
+  name:
+    type: string
+    example: "Calendar Do"
+  title:
+    type: string
+    example: "Add tasks to meetings"
+  subtitle:
+    type: string
+    example: "All your meetings on a simple list"
+  description:
+    type: string
+    example: >-
+      A simple and convenient viewing of events from the calendar in the
+      form of a list of tasks with the possibility of adding subtasks to
+      events. Convenient adding new events to the calendar as in the lists
+      of tasks
+  address:
+    type: string
+    example: "calendardo"
+  termsDate:
+    type: string
+    format: date
+    example: "2022-12-31"
+  termsAdditions:
+    type: array
+    items:
+      type: string
+  platforms:
+    type: array
+    items:
+      $ref: '../common/PlatformType.yaml'
+  createdAt:
+    type: string
+    format: date-time
+    example: "2022-08-15T10:30:00Z"
+  updatedAt:
+    type: string
+    format: date-time
+    example: "2025-04-02T15:35:22Z"

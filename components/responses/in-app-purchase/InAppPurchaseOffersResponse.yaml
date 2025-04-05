@@ -1,0 +1,14 @@
+description: List of offers
+content:
+  application/json:
+    schema:
+      type: object
+      description: List of offers
+      required:
+        - offers
+      properties:
+        offers:
+          type: array
+          description: Collection of sections
+          items:
+            $ref: '../../schemas/in-app-purchase/InAppPurchaseOffer.yaml'

@@ -1,0 +1,12 @@
+description: Application
+content:
+  application/json:
+    schema:
+      type: object
+      description: Application
+      required:
+        - app
+      properties:
+        app:
+          $ref: '../../schemas/app/App.yaml'
+          description: Single application details

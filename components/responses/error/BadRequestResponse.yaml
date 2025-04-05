@@ -1,0 +1,10 @@
+# Bad Request response - 400 error
+description: Bad request
+content:
+  application/json:
+    schema:
+      $ref: '../../schemas/error/Error.yaml'
+    example:
+      error: "validation_error"
+      code: "invalid_parameter"
+      message: "Bad request"

@@ -1,0 +1,19 @@
+get:
+  summary: Get features
+  description: Retrieve features
+  operationId: getFeature
+  tags:
+    - features
+  security:
+    - ApiKeyAuth: []
+  parameters:
+    - $ref: '../../components/parameters/FeatureId.yaml'
+  responses:
+    '200':
+      $ref: '../../components/responses/feature/FeatureResponse.yaml'
+    '400':
+      $ref: '../../components/responses/error/BadRequestResponse.yaml'
+    '404':
+      $ref: '../../components/responses/error/NotFoundResponse.yaml'
+    '500':
+      $ref: '../../components/responses/error/InternalServerErrorResponse.yaml'

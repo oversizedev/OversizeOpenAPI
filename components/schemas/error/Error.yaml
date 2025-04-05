@@ -1,0 +1,19 @@
+# Error Response Schema
+type: object
+required:
+  - error
+  - code
+  - message
+properties:
+  error:
+    type: string
+    description: Error type identifier
+    example: "validation_error"
+  code:
+    type: string
+    description: Specific error code
+    example: "invalid_parameter"
+  message:
+    type: string
+    description: Human-readable error message
+    example: "The request contains invalid parameters"

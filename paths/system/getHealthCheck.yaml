@@ -1,0 +1,24 @@
+get:
+  summary: Health Check
+  description: Endpoint to check the health of the service
+  operationId: getHealthCheck
+  tags:
+    - system
+  responses:
+    '200':
+      description: Service is healthy
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                enum:
+                  - up
+                  - down
+                example: "up"
+            required:
+              - status
+    '400':
+      $ref: '../../components/responses/error/BadRequestResponse.yaml'

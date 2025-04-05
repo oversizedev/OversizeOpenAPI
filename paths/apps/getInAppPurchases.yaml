@@ -10,7 +10,7 @@ get:
     - $ref: '../../components/parameters/AppId.yaml'
   responses:
     '200':
-      $ref: '../../components/responses/inAppPurchase/InAppPurchaseResponse.yaml'
+      $ref: '../../components/responses/in-app-purchase/InAppPurchaseResponse.yaml'
     '400':
       $ref: '../../components/responses/error/BadRequestResponse.yaml'
     '404':

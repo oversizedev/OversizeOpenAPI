@@ -8,7 +8,7 @@ get:
     - ApiKeyAuth: []
   responses:
     '200':
-      $ref: '../../components/responses/inAppPurchase/InAppPurchaseOffersResponse.yaml'
+      $ref: '../../components/responses/in-app-purchase/InAppPurchaseOffersResponse.yaml'
     '400':
       $ref: '../../components/responses/error/BadRequestResponse.yaml'
     '404':

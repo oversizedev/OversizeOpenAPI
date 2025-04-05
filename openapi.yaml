@@ -53,7 +53,7 @@ paths:
   /v1/features/{id}:
     $ref: './paths/features/getFeature.yaml'
   /v1/in-app-purchases/offers:
-    $ref: './paths/inAppPurchases/getInAppPurchaseOffers.yaml'
+    $ref: './paths/in-app-purchase/getInAppPurchaseOffers.yaml'
   /v1/infos:
     $ref: './paths/infos/getInfos.yaml'
   /v1/health-check:

@@ -11,4 +11,4 @@ content:
           type: array
           description: Collection of sections
           items:
-            $ref: '../../schemas/inAppPurchase/InAppPurchaseOffer.yaml'
+            $ref: '../../schemas/in-app-purchase/InAppPurchaseOffer.yaml'

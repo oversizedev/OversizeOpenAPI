@@ -1,11 +1,15 @@
-type: object
-required:
-  - productIds
-  - banner
-properties:
-  productIds:
-    type: array
-    items:
-      type: string
-  banner:
-    $ref: '../../schemas/inAppPurchase/InAppPurchaseBanner.yaml'
+description: Response containing in-app purchase product IDs and banner information
+content:
+  application/json:
+    schema:
+      type: object
+      required:
+        - productIds
+        - banner
+      properties:
+        productIds:
+          type: array
+          items:
+            type: string
+        banner:
+          $ref: '../../schemas/inAppPurchase/InAppPurchaseBanner.yaml'

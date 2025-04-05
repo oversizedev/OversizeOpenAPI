@@ -1,0 +1,12 @@
+description: Ad
+content:
+  application/json:
+    schema:
+      type: object
+      description: Ad
+      required:
+        - ad
+      properties:
+        ad:
+          description: App Ad
+          $ref: '../../schemas/ad/Ad.yaml'

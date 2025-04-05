@@ -1,16 +1,16 @@
 get:
-  summary: Get App Information
-  description: Retrieve application
-  operationId: getApp
+  operationId: getInAppPurchases
+  summary: Get all In-AppPurchases associated with a specific application
+  description: Retrieve application In-AppPurchases products
   tags:
-    - apps
+    - in-app-purchases
   security:
     - ApiKeyAuth: []
   parameters:
     - $ref: '../../components/parameters/AppId.yaml'
   responses:
     '200':
-      $ref: '../../components/responses/app/AppResponse.yaml'
+      $ref: '../../components/responses/inAppPurchase/InAppPurchaseResponse.yaml'
     '400':
       $ref: '../../components/responses/error/BadRequestResponse.yaml'
     '404':

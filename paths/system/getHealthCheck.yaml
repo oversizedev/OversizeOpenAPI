@@ -21,4 +21,4 @@ get:
             required:
               - status
     '400':
-      $ref: '../../components/responses/error/BadRequest.yaml'
+      $ref: '../../components/responses/error/BadRequestResponse.yaml'

@@ -1,14 +1,14 @@
-description: List of features
+description: List of offers
 content:
   application/json:
     schema:
       type: object
-      description: List of features
+      description: List of offers
       required:
-        - sections
+        - offers
       properties:
-        sections:
+        offers:
           type: array
           description: Collection of sections
           items:
-            $ref: '../../schemas/feature/Feature.yaml'
+            $ref: '../../schemas/inAppPurchase/InAppPurchaseOffer.yaml'

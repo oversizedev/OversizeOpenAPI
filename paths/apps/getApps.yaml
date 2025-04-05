@@ -10,6 +10,6 @@ get:
     '200':
       $ref: '../../components/responses/app/AppsResponse.yaml'
     '400':
-      $ref: '../../components/responses/error/BadRequest.yaml'
+      $ref: '../../components/responses/error/BadRequestResponse.yaml'
     '500':
-      $ref: '../../components/responses/error/InternalServerError.yaml'
+      $ref: '../../components/responses/error/InternalServerErrorResponse.yaml'

@@ -1,16 +1,14 @@
 get:
-  summary: Get App Information
-  description: Retrieve application
-  operationId: getApp
+  operationId: getInAppPurchaseOffers
+  summary: Get all sale offers
+  description: Retrieve StoreKit offers
   tags:
-    - apps
+    - in-app-purchases
   security:
     - ApiKeyAuth: []
-  parameters:
-    - $ref: '../../components/parameters/AppId.yaml'
   responses:
     '200':
-      $ref: '../../components/responses/app/AppResponse.yaml'
+      $ref: '../../components/responses/inAppPurchase/InAppPurchaseOffersResponse.yaml'
     '400':
       $ref: '../../components/responses/error/BadRequestResponse.yaml'
     '404':

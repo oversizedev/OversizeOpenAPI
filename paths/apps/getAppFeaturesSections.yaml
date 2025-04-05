@@ -11,10 +11,10 @@ get:
     - $ref: '../../components/parameters/Platforms.yaml'
   responses:
     '200':
-      $ref: '../../components/responses/feature/SectionsResponse.yaml'
+      $ref: '../../components/responses/section/SectionsResponse.yaml'
     '400':
-      $ref: '../../components/responses/error/BadRequest.yaml'
+      $ref: '../../components/responses/error/BadRequestResponse.yaml'
     '404':
-      $ref: '../../components/responses/error/NotFound.yaml'
+      $ref: '../../components/responses/error/NotFoundResponse.yaml'
     '500':
-      $ref: '../../components/responses/error/InternalServerError.yaml'
+      $ref: '../../components/responses/error/InternalServerErrorResponse.yaml'

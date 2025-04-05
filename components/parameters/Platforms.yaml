@@ -5,4 +5,4 @@ description: Filter by platforms
 schema:
   type: array
   items:
-    $ref: './../schemas/app/PlatformType.yaml'
+    $ref: './../schemas/common/PlatformType.yaml'

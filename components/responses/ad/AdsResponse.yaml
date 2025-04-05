@@ -1,9 +1,9 @@
-description: List of ads
+description: List of app ads
 content:
   application/json:
     schema:
       type: object
-      description: List of ads
+      description: List of app ads
       required:
         - ads
       properties:

@@ -36,4 +36,4 @@ properties:
   features:
     type: array
     items:
-      $ref: './Feature.yaml'
+      $ref: '../feature/Feature.yaml'

@@ -3,7 +3,7 @@ description: Internal server error
 content:
   application/json:
     schema:
-      $ref: '../../schemas/error/ErrorResponse.yaml'
+      $ref: '../../schemas/error/Error.yaml'
     example:
       error: "validation_error"
       code: "invalid_parameter"

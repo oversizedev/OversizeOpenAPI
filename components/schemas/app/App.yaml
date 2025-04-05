@@ -44,7 +44,7 @@ properties:
   platforms:
     type: array
     items:
-      $ref: './PlatformType.yaml'
+      $ref: '../common/PlatformType.yaml'
   createdAt:
     type: string
     format: date-time

@@ -10,9 +10,9 @@ content:
       properties:
         mainSection:
           description: General section
-          $ref: '../../schemas/feature/Section.yaml'
+          $ref: '../../schemas/section/Section.yaml'
         sections:
           type: array
           description: Collection of sections
           items:
-            $ref: '../../schemas/feature/Section.yaml'
+            $ref: '../../schemas/section/Section.yaml'

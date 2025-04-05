@@ -1,3 +1,4 @@
+type: object
 required:
   - productIds
   - banner
@@ -7,5 +8,4 @@ properties:
     items:
       type: string
   banner:
-    $ref: './AppStoreBanner.yaml'
-type: object
+    $ref: '../../schemas/inAppPurchase/InAppPurchaseBanner.yaml'

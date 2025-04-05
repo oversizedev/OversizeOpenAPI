@@ -28,11 +28,11 @@ tags:
     description: Feature-related endpoints
   - name: ads
     description: Advertisement-related endpoints
-  - name: app-store
-    description: App Store integration endpoints
-  - name: info
+  - name: in-app-purchases
+    description: App Store In-AppPurchases integration endpoints
+  - name: infos
     description: Information-related endpoints
-  - name: system
+  - name: systems
     description: System-related endpoints like health checks
 
 paths:
@@ -47,15 +47,13 @@ paths:
   /v1/apps/{id}/ads:
     $ref: './paths/apps/getAppAd.yaml'
   /v1/apps/{id}/ad:
-    $ref: './paths/ads/getAppAds.yaml'
-  /v1/apps/{id}/app-store/productIds:
-    $ref: "./paths/GetAppStoreProductIds.yaml"
-  /v1/apps/{id}/app-store/products:
-    $ref: "./paths/GetAppStoreProducts.yaml"
+    $ref: './paths/apps/getAppAds.yaml'
+  /v1/apps/{id}/in-app-purchases:
+    $ref: "./paths/apps/getInAppPurchases.yaml"
   /v1/features/{id}:
     $ref: './paths/features/getFeature.yaml'
-  /v1/sale-offers:
-    $ref: './paths/GetSaleOffers.yaml'
+  /v1/in-app-purchases/offers:
+    $ref: './paths/inAppPurchases/getInAppPurchaseOffers.yaml'
   /v1/infos:
     $ref: './paths/infos/getInfos.yaml'
   /v1/health-check:

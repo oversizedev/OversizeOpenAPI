@@ -45,9 +45,9 @@ paths:
   /v1/apps/{id}/features/sections:
     $ref: './paths/apps/getAppFeaturesSections.yaml'
   /v1/apps/{id}/ads:
-    $ref: './paths/apps/getAppAd.yaml'
-  /v1/apps/{id}/ad:
     $ref: './paths/apps/getAppAds.yaml'
+  /v1/apps/{id}/ad:
+    $ref: './paths/apps/getAppAd.yaml'
   /v1/apps/{id}/in-app-purchases:
     $ref: "./paths/apps/getInAppPurchases.yaml"
   /v1/features/{id}:

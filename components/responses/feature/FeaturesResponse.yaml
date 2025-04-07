@@ -5,9 +5,9 @@ content:
       type: object
       description: List of features
       required:
-        - sections
+        - features
       properties:
-        sections:
+        features:
           type: array
           description: Collection of sections
           items:

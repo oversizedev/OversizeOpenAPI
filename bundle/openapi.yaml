@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: OversizeAPI
-  version: 1.1.0
+  version: 1.1.1
   description: |-
     # OversizeAPI
 
@@ -738,9 +738,9 @@ components:
             type: object
             description: List of features
             required:
-              - sections
+              - features
             properties:
-              sections:
+              features:
                 type: array
                 description: Collection of sections
                 items:

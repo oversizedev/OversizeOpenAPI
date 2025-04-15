@@ -29,10 +29,8 @@ properties:
   gridColumns:
     type: integer
     example: 1
-  screenshotUrl:
-    type: string
-    format: uri
-    example: https://cdn.oversize.design/assets/apps/dressweather/screenshots/1.png
+  screenshot:
+    $ref: '../common/Screenshot.yaml'
   features:
     type: array
     items:

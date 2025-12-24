@@ -49,7 +49,10 @@ properties:
     type: string
     format: date-time
     example: "2022-08-15T10:30:00Z"
-  updatedAt:
+  releasedAt:
     type: string
     format: date-time
-    example: "2025-04-02T15:35:22Z"
+    example: "2025-08-15T10:30:00Z"
+  isHidden:
+    type: boolean
+    example: false

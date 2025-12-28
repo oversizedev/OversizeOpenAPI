@@ -4,8 +4,6 @@ get:
   description: Retrieve application In-AppPurchases products
   tags:
     - in-app-purchases
-  security:
-    - ApiKeyAuth: []
   parameters:
     - $ref: '../../components/parameters/AppId.yaml'
   responses:
@@ -13,6 +11,8 @@ get:
       $ref: '../../components/responses/in-app-purchase/InAppPurchaseResponse.yaml'
     '400':
       $ref: '../../components/responses/error/BadRequestResponse.yaml'
+    '401':
+      $ref: '../../components/responses/error/UnauthorizedResponse.yaml'
     '404':
       $ref: '../../components/responses/error/NotFoundResponse.yaml'
     '500':

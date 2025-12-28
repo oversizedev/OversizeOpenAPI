@@ -4,13 +4,13 @@ get:
   description: Retrieve StoreKit offers
   tags:
     - in-app-purchases
-  security:
-    - ApiKeyAuth: []
   responses:
     '200':
       $ref: '../../components/responses/in-app-purchase/InAppPurchaseOffersResponse.yaml'
     '400':
       $ref: '../../components/responses/error/BadRequestResponse.yaml'
+    '401':
+      $ref: '../../components/responses/error/UnauthorizedResponse.yaml'
     '404':
       $ref: '../../components/responses/error/NotFoundResponse.yaml'
     '500':

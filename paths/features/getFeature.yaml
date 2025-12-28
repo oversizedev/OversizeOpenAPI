@@ -4,8 +4,6 @@ get:
   operationId: getFeature
   tags:
     - features
-  security:
-    - ApiKeyAuth: []
   parameters:
     - $ref: '../../components/parameters/FeatureId.yaml'
   responses:
@@ -13,6 +11,8 @@ get:
       $ref: '../../components/responses/feature/FeatureResponse.yaml'
     '400':
       $ref: '../../components/responses/error/BadRequestResponse.yaml'
+    '401':
+      $ref: '../../components/responses/error/UnauthorizedResponse.yaml'
     '404':
       $ref: '../../components/responses/error/NotFoundResponse.yaml'
     '500':

@@ -4,8 +4,6 @@ get:
   operationId: getApp
   tags:
     - apps
-  security:
-    - ApiKeyAuth: []
   parameters:
     - $ref: '../../components/parameters/AppId.yaml'
   responses:
@@ -13,6 +11,8 @@ get:
       $ref: '../../components/responses/app/AppResponse.yaml'
     '400':
       $ref: '../../components/responses/error/BadRequestResponse.yaml'
+    '401':
+      $ref: '../../components/responses/error/UnauthorizedResponse.yaml'
     '404':
       $ref: '../../components/responses/error/NotFoundResponse.yaml'
     '500':

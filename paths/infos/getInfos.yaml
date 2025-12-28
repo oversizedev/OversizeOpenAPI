@@ -8,5 +8,7 @@ get:
       $ref: '../../components/responses/info/InfoResponse.yaml'
     '400':
       $ref: '../../components/responses/error/BadRequestResponse.yaml'
+    '401':
+      $ref: '../../components/responses/error/UnauthorizedResponse.yaml'
     '500':
       $ref: '../../components/responses/error/InternalServerErrorResponse.yaml'

@@ -4,8 +4,6 @@ get:
   description: Get all features associated with a specific application
   tags:
     - apps
-  security:
-    - ApiKeyAuth: []
   parameters:
     - $ref: '../../components/parameters/AppId.yaml'
     - $ref: '../../components/parameters/Platforms.yaml'
@@ -14,6 +12,8 @@ get:
       $ref: '../../components/responses/section/SectionsResponse.yaml'
     '400':
       $ref: '../../components/responses/error/BadRequestResponse.yaml'
+    '401':
+      $ref: '../../components/responses/error/UnauthorizedResponse.yaml'
     '404':
       $ref: '../../components/responses/error/NotFoundResponse.yaml'
     '500':

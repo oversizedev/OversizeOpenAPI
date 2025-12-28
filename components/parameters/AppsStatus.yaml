@@ -1,0 +1,11 @@
+# App filter parameter
+name: status
+in: query
+description: Filter applications by release status
+schema:
+  type: string
+  enum:
+    - released
+    - draft
+    - all
+  default: released

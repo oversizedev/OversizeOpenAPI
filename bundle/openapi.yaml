@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: OversizeAPI
-  version: 1.6.0
+  version: 1.7.0
   description: |-
     # OversizeAPI
 
@@ -53,6 +53,8 @@ paths:
           $ref: '#/components/responses/AppsResponse'
         '400':
           $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
         '500':
           $ref: '#/components/responses/InternalServerErrorResponse'
   /v1/apps/{id}:
@@ -62,8 +64,6 @@ paths:
       operationId: getApp
       tags:
         - apps
-      security:
-        - ApiKeyAuth: []
       parameters:
         - $ref: '#/components/parameters/AppId'
       responses:
@@ -71,6 +71,8 @@ paths:
           $ref: '#/components/responses/AppResponse'
         '400':
           $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
         '404':
           $ref: '#/components/responses/NotFoundResponse'
         '500':
@@ -82,8 +84,6 @@ paths:
       description: Get all features associated with a specific application
       tags:
         - apps
-      security:
-        - ApiKeyAuth: []
       parameters:
         - $ref: '#/components/parameters/AppId'
         - $ref: '#/components/parameters/Platforms'
@@ -102,6 +102,8 @@ paths:
           $ref: '#/components/responses/FeaturesResponse'
         '400':
           $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
         '404':
           $ref: '#/components/responses/NotFoundResponse'
         '500':
@@ -113,8 +115,6 @@ paths:
       description: Get all features associated with a specific application
       tags:
         - apps
-      security:
-        - ApiKeyAuth: []
       parameters:
         - $ref: '#/components/parameters/AppId'
         - $ref: '#/components/parameters/Platforms'
@@ -123,6 +123,8 @@ paths:
           $ref: '#/components/responses/SectionsResponse'
         '400':
           $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
         '404':
           $ref: '#/components/responses/NotFoundResponse'
         '500':
@@ -134,8 +136,6 @@ paths:
       description: Retrieve application ads
       tags:
         - ads
-      security:
-        - ApiKeyAuth: []
       parameters:
         - $ref: '#/components/parameters/AppId'
         - $ref: '#/components/parameters/Platforms'
@@ -144,6 +144,8 @@ paths:
           $ref: '#/components/responses/AdsResponse'
         '400':
           $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
         '404':
           $ref: '#/components/responses/NotFoundResponse'
         '500':
@@ -155,8 +157,6 @@ paths:
       description: Retrieve application ad
       tags:
         - ads
-      security:
-        - ApiKeyAuth: []
       parameters:
         - $ref: '#/components/parameters/AppId'
         - $ref: '#/components/parameters/Platforms'
@@ -165,6 +165,8 @@ paths:
           $ref: '#/components/responses/AdResponse'
         '400':
           $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
         '404':
           $ref: '#/components/responses/NotFoundResponse'
         '500':
@@ -176,8 +178,6 @@ paths:
       description: Retrieve application In-AppPurchases products
       tags:
         - in-app-purchases
-      security:
-        - ApiKeyAuth: []
       parameters:
         - $ref: '#/components/parameters/AppId'
       responses:
@@ -185,6 +185,8 @@ paths:
           $ref: '#/components/responses/InAppPurchaseResponse'
         '400':
           $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
         '404':
           $ref: '#/components/responses/NotFoundResponse'
         '500':
@@ -196,8 +198,6 @@ paths:
       operationId: getFeature
       tags:
         - features
-      security:
-        - ApiKeyAuth: []
       parameters:
         - $ref: '#/components/parameters/FeatureId'
       responses:
@@ -205,6 +205,8 @@ paths:
           $ref: '#/components/responses/FeatureResponse'
         '400':
           $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
         '404':
           $ref: '#/components/responses/NotFoundResponse'
         '500':
@@ -216,13 +218,13 @@ paths:
       description: Retrieve StoreKit offers
       tags:
         - in-app-purchases
-      security:
-        - ApiKeyAuth: []
       responses:
         '200':
           $ref: '#/components/responses/InAppPurchaseOffersResponse'
         '400':
           $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
         '404':
           $ref: '#/components/responses/NotFoundResponse'
         '500':
@@ -238,6 +240,8 @@ paths:
           $ref: '#/components/responses/InfoResponse'
         '400':
           $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
         '500':
           $ref: '#/components/responses/InternalServerErrorResponse'
   /v1/health-check:
@@ -247,6 +251,7 @@ paths:
       operationId: getHealthCheck
       tags:
         - system
+      security: []
       responses:
         '200':
           description: Service is healthy
@@ -765,6 +770,16 @@ components:
             error: validation_error
             code: invalid_parameter
             message: Bad request
+    UnauthorizedResponse:
+      description: Unauthorized - Invalid or missing API key
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: authentication_error
+            code: unauthorized
+            message: Invalid or missing API key
     InternalServerErrorResponse:
       description: Internal server error
       content:

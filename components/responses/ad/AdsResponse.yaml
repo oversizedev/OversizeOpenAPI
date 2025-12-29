@@ -12,3 +12,15 @@ content:
           description: Collection of ads
           items:
             $ref: '../../schemas/ad/Ad.yaml'
+      example:
+        ads:
+          - id: 6444375229
+            title: "Secret Photo"
+            description: "Don't be afraid for your secrets to be exposed"
+            iconUrl: "https://cdn.oversize.design/assets/apps/secretphoto/icon.png"
+            priority: 1
+          - id: 6446330334
+            title: "Med History"
+            description: "Take charge of your health"
+            iconUrl: "https://cdn.oversize.design/assets/apps/medhistory/icon.png"
+            priority: 5

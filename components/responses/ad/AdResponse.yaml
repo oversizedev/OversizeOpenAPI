@@ -10,3 +10,10 @@ content:
         ad:
           description: App Ad
           $ref: '../../schemas/ad/Ad.yaml'
+      example:
+        ad:
+          id: 6444375229
+          title: "Secret Photo"
+          description: "Don't be afraid for your secrets to be exposed"
+          iconUrl: "https://cdn.oversize.design/assets/apps/secretphoto/icon.png"
+          priority: 1

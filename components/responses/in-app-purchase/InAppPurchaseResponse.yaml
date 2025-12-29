@@ -13,3 +13,11 @@ content:
             type: string
         banner:
           $ref: '../../schemas/in-app-purchase/InAppPurchaseBanner.yaml'
+      example:
+        productIds:
+          - "premium_yearly"
+          - "premium_monthly"
+          - "premium_lifetime"
+        banner:
+          title: "Unlock Premium Features"
+          subtitle: "Get full access to all features"

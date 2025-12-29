@@ -6,7 +6,7 @@ get:
     - apps
   parameters:
     - $ref: '../../components/parameters/Platforms.yaml'
-    - $ref: '../../components/parameters/AppsStatus.yaml'
+    - $ref: '../../components/parameters/AppStatus.yaml'
   responses:
     '200':
       $ref: '../../components/responses/app/AppsResponse.yaml'

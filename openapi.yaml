@@ -64,8 +64,8 @@ components:
       $ref: './components/parameters/FeatureId.yaml'
     Platforms:
       $ref: './components/parameters/Platforms.yaml'
-    AppsStatus:
-      $ref: './components/parameters/AppsStatus.yaml'
+    AppStatus:
+      $ref: './components/parameters/AppStatus.yaml'
     FeatureContext:
       $ref: './components/parameters/FeatureContext.yaml'
   securitySchemes:

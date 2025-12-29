@@ -16,9 +16,11 @@ properties:
     example: https://oversize.app
   email:
     type: string
+    format: email
     example: support@oversize.design
   supportEmail:
     type: string
+    format: email
     example: support@oversize.design
   appStoreId:
     type: string

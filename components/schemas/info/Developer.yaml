@@ -8,6 +8,7 @@ required:
 properties:
   email:
     type: string
+    format: email
     example: alexander@oversize.app
   name:
     type: string
@@ -18,4 +19,5 @@ properties:
       $ref: '../common/SocialNetwork.yaml'
   url:
     type: string
+    format: url
     example: https://romanov.cc

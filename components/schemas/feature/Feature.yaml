@@ -48,5 +48,6 @@ properties:
     example: "https://cdn.oversize.design/assets/apps/dressweather/features/2.png"
     description: URL for the features icon
   screenshots:
+    type: array
     items:
       $ref: '../common/Screenshot.yaml'

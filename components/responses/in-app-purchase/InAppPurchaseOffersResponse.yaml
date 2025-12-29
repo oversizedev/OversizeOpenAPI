@@ -9,6 +9,6 @@ content:
       properties:
         offers:
           type: array
-          description: Collection of sections
+          description: Collection of offers
           items:
             $ref: '../../schemas/in-app-purchase/InAppPurchaseOffer.yaml'

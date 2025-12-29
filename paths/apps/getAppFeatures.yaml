@@ -7,16 +7,7 @@ get:
   parameters:
     - $ref: '../../components/parameters/AppId.yaml'
     - $ref: '../../components/parameters/Platforms.yaml'
-    - name: context
-      required: false
-      in: query
-      description: Filter features by context
-      schema:
-        type: string
-        enum:
-          - paywall
-          - onboarding
-        example: paywall
+    - $ref: '../../components/parameters/FeatureContext.yaml'
   responses:
     '200':
       $ref: '../../components/responses/feature/FeaturesResponse.yaml'

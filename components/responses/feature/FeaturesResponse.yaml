@@ -9,6 +9,6 @@ content:
       properties:
         features:
           type: array
-          description: Collection of sections
+          description: Collection of features
           items:
             $ref: '../../schemas/feature/Feature.yaml'

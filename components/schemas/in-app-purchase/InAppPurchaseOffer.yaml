@@ -21,7 +21,7 @@ properties:
     type: string
     example: Get up to <salePercent>% off for <subscriptionName> subscription
       and Free full access for <freeDays> days
-  imageURL:
+  imageUrl:
     type: string
     format: url
   startDate:

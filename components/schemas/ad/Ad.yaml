@@ -13,7 +13,7 @@ properties:
   description:
     type: string
     example: Control weight easily, follow the successes of every month
-  iconURL:
+  iconUrl:
     type: string
     format: url
   priority:

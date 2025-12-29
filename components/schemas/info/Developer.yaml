@@ -1,3 +1,5 @@
+type: object
+description: Developer contact information and social media profiles
 required:
   - email
   - name
@@ -11,9 +13,9 @@ properties:
     type: string
     example: Alexander Romanov
   socialNetworks:
+    type: array
     items:
       $ref: '../common/SocialNetwork.yaml'
   url:
     type: string
     example: https://romanov.cc
-type: object

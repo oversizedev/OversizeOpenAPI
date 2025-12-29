@@ -1,3 +1,5 @@
+type: object
+description: Company information including contact details and App Store presence
 required:
   - name
   - url
@@ -22,6 +24,6 @@ properties:
     type: string
     example: '1459928735'
   socialNetworks:
+    type: array
     items:
       $ref: '../common/SocialNetwork.yaml'
-type: object

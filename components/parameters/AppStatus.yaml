@@ -1,6 +1,7 @@
 # App filter parameter
 name: status
 in: query
+required: false
 description: Filter applications by release status
 schema:
   type: string

@@ -9,6 +9,18 @@ content:
       properties:
         offers:
           type: array
-          description: Collection of sections
+          description: Collection of offers
           items:
             $ref: '../../schemas/in-app-purchase/InAppPurchaseOffer.yaml'
+      example:
+        offers:
+          - id: 1
+            badge: "Black Friday"
+            title: "Black Friday"
+            headline: "Biggest Sale: 50% OFF"
+            description: "Get up to 50% off for Premium subscription and Free full access for 7 days"
+            imageUrl: "https://cdn.oversize.design/assets/illustrations/objects/sales/gift/large.png"
+            startDate: "2023-11-24T00:00:00Z"
+            endDate: "2023-11-26T23:59:59Z"
+            accentColor: "000000"
+            effect: "snow"

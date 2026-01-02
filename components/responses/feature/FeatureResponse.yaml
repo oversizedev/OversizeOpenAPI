@@ -10,3 +10,14 @@ content:
         feature:
           $ref: '../../schemas/feature/Feature.yaml'
           description: Single feature details
+      example:
+        feature:
+          id: "1"
+          title: "No Ads"
+          subtitle: "Advertising will not be displayed"
+          description: "Enjoy an ad-free experience while using the app."
+          textSize: "medium"
+          textAlignment: "center"
+          iconUrl: "https://cdn.oversize.design/assets/icons/iconly/star.svg"
+          illustrationUrl: "https://cdn.oversize.design/assets/illustrations/objects/tools/speaker/large.png"
+          screenshots: []

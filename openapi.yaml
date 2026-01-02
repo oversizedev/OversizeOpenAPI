@@ -58,6 +58,16 @@ components:
   parameters:
     AppVersion:
       $ref: './components/parameters/AppVersion.yaml'
+    AppId:
+      $ref: './components/parameters/AppId.yaml'
+    FeatureId:
+      $ref: './components/parameters/FeatureId.yaml'
+    Platforms:
+      $ref: './components/parameters/Platforms.yaml'
+    AppStatus:
+      $ref: './components/parameters/AppStatus.yaml'
+    FeatureContext:
+      $ref: './components/parameters/FeatureContext.yaml'
   securitySchemes:
     ApiKeyAuth:
       $ref: './components/securitySchemes/apiKeyAuth.yaml'

@@ -1,4 +1,5 @@
 type: object
+description: Social network profile information with links and branding
 required:
   - id
   - title
@@ -13,7 +14,9 @@ properties:
     example: aromanov91
   url:
     type: string
+    format: url
     example: https://www.facebook.com/aromanov91
   iconUrl:
     type: string
+    format: url
     example: https://cdn.oversize.design/assets/icons/brands/dribbble.svg

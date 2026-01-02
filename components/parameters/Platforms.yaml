@@ -1,6 +1,7 @@
 # Platforms parameter - Used to identify specific applications
 name: platforms
 in: query
+required: false
 description: Filter by platforms
 schema:
   type: array

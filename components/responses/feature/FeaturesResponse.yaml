@@ -9,6 +9,26 @@ content:
       properties:
         features:
           type: array
-          description: Collection of sections
+          description: Collection of features
           items:
             $ref: '../../schemas/feature/Feature.yaml'
+      example:
+        features:
+          - id: "1"
+            title: "No Ads"
+            subtitle: "Advertising will not be displayed"
+            description: "Enjoy an ad-free experience while using the app."
+            textSize: "medium"
+            textAlignment: "center"
+            iconUrl: "https://cdn.oversize.design/assets/icons/iconly/star.svg"
+            illustrationUrl: "https://cdn.oversize.design/assets/illustrations/objects/tools/speaker/large.png"
+            screenshots: []
+          - id: "4"
+            title: "Sync with iCloud"
+            subtitle: "Data will not be lost"
+            description: "Automatically sync your data with iCloud to keep it safe and accessible across devices."
+            textSize: "medium"
+            textAlignment: "center"
+            iconUrl: "https://cdn.oversize.design/assets/icons/iconly/star.svg"
+            illustrationUrl: "https://cdn.oversize.design/assets/illustrations/objects/tools/cloud/large.png"
+            screenshots: []

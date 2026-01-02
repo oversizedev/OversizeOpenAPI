@@ -2,6 +2,7 @@ get:
   tags:
     - infos
   summary: Fetch info
+  description: Retrieve company and developer information including contact details and social media profiles
   operationId: getInfo
   responses:
     '200':

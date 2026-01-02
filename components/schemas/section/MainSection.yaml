@@ -10,7 +10,7 @@ properties:
     example: 0
   type:
     type: string
-    example: cards
+    example: default
     enum:
       - default
   title:

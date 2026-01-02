@@ -1,3 +1,5 @@
+type: object
+description: Company information including contact details and App Store presence
 required:
   - name
   - url
@@ -14,14 +16,16 @@ properties:
     example: https://oversize.app
   email:
     type: string
+    format: email
     example: support@oversize.design
   supportEmail:
     type: string
+    format: email
     example: support@oversize.design
   appStoreId:
     type: string
     example: '1459928735'
   socialNetworks:
+    type: array
     items:
       $ref: '../common/SocialNetwork.yaml'
-type: object

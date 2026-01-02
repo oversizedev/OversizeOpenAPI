@@ -12,3 +12,24 @@ content:
           $ref: '../../schemas/info/Developer.yaml'
         company:
           $ref: '../../schemas/info/Company.yaml'
+      example:
+        company:
+          name: "Oversize"
+          url: "https://oversize.app"
+          email: "support@oversize.design"
+          supportEmail: "support@oversize.design"
+          appStoreId: "1459928735"
+          socialNetworks:
+            - id: "aromanov91"
+              title: "facebook"
+              url: "https://www.facebook.com/aromanov91"
+              iconUrl: "https://cdn.oversize.design/assets/icons/brands/facebook.svg"
+        developer:
+          name: "Alexander Romanov"
+          email: "alexander@oversize.app"
+          url: "https://romanov.cc"
+          socialNetworks:
+            - id: "aromanov91"
+              title: "facebook"
+              url: "https://www.facebook.com/aromanov91"
+              iconUrl: "https://cdn.oversize.design/assets/icons/brands/facebook.svg"

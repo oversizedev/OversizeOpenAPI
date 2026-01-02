@@ -10,3 +10,14 @@ content:
         app:
           $ref: '../../schemas/app/App.yaml'
           description: Single application details
+      example:
+        app:
+          id: "6443709281"
+          name: "Scale Down"
+          title: "Control weight easily, follow the successes of every month"
+          subtitle: "It is very difficult to reset everything, but if you move in small steps every day, then it is easier to reach the goal"
+          description: "All data is saved in the phone or is possible synchronization with iCloud"
+          address: "scaledown"
+          termsDate: "2022-01-06"
+          platforms:
+            - "iOS"

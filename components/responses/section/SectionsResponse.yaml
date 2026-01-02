@@ -16,3 +16,22 @@ content:
           description: Collection of sections
           items:
             $ref: '../../schemas/section/Section.yaml'
+      example:
+        mainSection:
+          id: "main"
+          type: "default"
+          title: "Main"
+          screenshots:
+            - url: "https://cdn.oversize.design/assets/apps/scaledown/screenshots/1.png"
+              alignment: "top"
+              platform: "iOS"
+          features: []
+        sections:
+          - id: "premium"
+            title: "Premium Features"
+            subtitle: "Unlock all features"
+            features:
+              - id: "1"
+                title: "No Ads"
+                textSize: "medium"
+                textAlignment: "center"

@@ -5,7 +5,11 @@ get:
   tags:
     - apps
   parameters:
+    - $ref: '../../components/parameters/AppVersion.yaml'
     - $ref: '../../components/parameters/AppId.yaml'
+    - $ref: '../../components/parameters/BundleId.yaml'
+    - $ref: '../../components/parameters/AcceptLanguage.yaml'
+    - $ref: '../../components/parameters/AppStoreId.yaml'
   responses:
     '200':
       $ref: '../../components/responses/app/AppResponse.yaml'

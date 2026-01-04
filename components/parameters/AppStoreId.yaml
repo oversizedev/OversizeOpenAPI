@@ -1,0 +1,7 @@
+name: App-Store-ID
+in: header
+required: false
+description: Apple App Store application identifier
+schema:
+  type: string
+  example: "1234567890"

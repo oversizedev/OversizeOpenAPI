@@ -68,6 +68,12 @@ components:
       $ref: './components/parameters/AppStatus.yaml'
     FeatureContext:
       $ref: './components/parameters/FeatureContext.yaml'
+    BundleId:
+      $ref: './components/parameters/BundleId.yaml'
+    AcceptLanguage:
+      $ref: './components/parameters/AcceptLanguage.yaml'
+    AppStoreId:
+      $ref: './components/parameters/AppStoreId.yaml'
   securitySchemes:
     ApiKeyAuth:
-      $ref: './components/securitySchemes/apiKeyAuth.yaml'
+      $ref: './components/securitySchemes/ApiKeyAuth.yaml'

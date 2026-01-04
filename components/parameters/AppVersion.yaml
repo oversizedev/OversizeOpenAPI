@@ -1,7 +1,7 @@
-name: X-App-Version
+name: App-Version
 in: header
+required: false
 description: Client application version
 schema:
   type: string
   example: "1.2.3"
-required: true

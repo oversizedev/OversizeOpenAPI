@@ -1,0 +1,7 @@
+name: Accept-Language
+in: header
+required: false
+description: Preferred language for response content
+schema:
+  type: string
+  example: "en-US"

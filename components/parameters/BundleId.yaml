@@ -1,0 +1,7 @@
+name: App-Bundle-ID
+in: header
+required: false
+description: Bundle identifier in reverse domain notation
+schema:
+  type: string
+  example: "com.oversize.App"

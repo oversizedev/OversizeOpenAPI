@@ -4,6 +4,11 @@ get:
   description: Retrieve StoreKit offers
   tags:
     - in-app-purchases
+  parameters:
+    - $ref: '../../components/parameters/AppVersion.yaml'
+    - $ref: '../../components/parameters/BundleId.yaml'
+    - $ref: '../../components/parameters/AcceptLanguage.yaml'
+    - $ref: '../../components/parameters/AppStoreId.yaml'
   responses:
     '200':
       $ref: '../../components/responses/in-app-purchase/InAppPurchaseOffersResponse.yaml'

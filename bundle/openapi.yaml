@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: OversizeAPI
-  version: 1.8.0
+  version: 1.9.0
   description: |-
     # OversizeAPI
 
@@ -46,8 +46,12 @@ paths:
       tags:
         - apps
       parameters:
+        - $ref: '#/components/parameters/AppVersion'
         - $ref: '#/components/parameters/Platforms'
         - $ref: '#/components/parameters/AppStatus'
+        - $ref: '#/components/parameters/BundleId'
+        - $ref: '#/components/parameters/AcceptLanguage'
+        - $ref: '#/components/parameters/AppStoreId'
       responses:
         '200':
           $ref: '#/components/responses/AppsResponse'
@@ -65,7 +69,11 @@ paths:
       tags:
         - apps
       parameters:
+        - $ref: '#/components/parameters/AppVersion'
         - $ref: '#/components/parameters/AppId'
+        - $ref: '#/components/parameters/BundleId'
+        - $ref: '#/components/parameters/AcceptLanguage'
+        - $ref: '#/components/parameters/AppStoreId'
       responses:
         '200':
           $ref: '#/components/responses/AppResponse'
@@ -85,9 +93,13 @@ paths:
       tags:
         - apps
       parameters:
+        - $ref: '#/components/parameters/AppVersion'
         - $ref: '#/components/parameters/AppId'
         - $ref: '#/components/parameters/Platforms'
         - $ref: '#/components/parameters/FeatureContext'
+        - $ref: '#/components/parameters/BundleId'
+        - $ref: '#/components/parameters/AcceptLanguage'
+        - $ref: '#/components/parameters/AppStoreId'
       responses:
         '200':
           $ref: '#/components/responses/FeaturesResponse'
@@ -107,8 +119,12 @@ paths:
       tags:
         - apps
       parameters:
+        - $ref: '#/components/parameters/AppVersion'
         - $ref: '#/components/parameters/AppId'
         - $ref: '#/components/parameters/Platforms'
+        - $ref: '#/components/parameters/BundleId'
+        - $ref: '#/components/parameters/AcceptLanguage'
+        - $ref: '#/components/parameters/AppStoreId'
       responses:
         '200':
           $ref: '#/components/responses/SectionsResponse'
@@ -128,8 +144,12 @@ paths:
       tags:
         - ads
       parameters:
+        - $ref: '#/components/parameters/AppVersion'
         - $ref: '#/components/parameters/AppId'
         - $ref: '#/components/parameters/Platforms'
+        - $ref: '#/components/parameters/BundleId'
+        - $ref: '#/components/parameters/AcceptLanguage'
+        - $ref: '#/components/parameters/AppStoreId'
       responses:
         '200':
           $ref: '#/components/responses/AdsResponse'
@@ -149,8 +169,12 @@ paths:
       tags:
         - ads
       parameters:
+        - $ref: '#/components/parameters/AppVersion'
         - $ref: '#/components/parameters/AppId'
         - $ref: '#/components/parameters/Platforms'
+        - $ref: '#/components/parameters/BundleId'
+        - $ref: '#/components/parameters/AcceptLanguage'
+        - $ref: '#/components/parameters/AppStoreId'
       responses:
         '200':
           $ref: '#/components/responses/AdResponse'
@@ -170,7 +194,11 @@ paths:
       tags:
         - in-app-purchases
       parameters:
+        - $ref: '#/components/parameters/AppVersion'
         - $ref: '#/components/parameters/AppId'
+        - $ref: '#/components/parameters/BundleId'
+        - $ref: '#/components/parameters/AcceptLanguage'
+        - $ref: '#/components/parameters/AppStoreId'
       responses:
         '200':
           $ref: '#/components/responses/InAppPurchaseResponse'
@@ -190,7 +218,11 @@ paths:
       tags:
         - features
       parameters:
+        - $ref: '#/components/parameters/AppVersion'
         - $ref: '#/components/parameters/FeatureId'
+        - $ref: '#/components/parameters/BundleId'
+        - $ref: '#/components/parameters/AcceptLanguage'
+        - $ref: '#/components/parameters/AppStoreId'
       responses:
         '200':
           $ref: '#/components/responses/FeatureResponse'
@@ -209,6 +241,11 @@ paths:
       description: Retrieve StoreKit offers
       tags:
         - in-app-purchases
+      parameters:
+        - $ref: '#/components/parameters/AppVersion'
+        - $ref: '#/components/parameters/BundleId'
+        - $ref: '#/components/parameters/AcceptLanguage'
+        - $ref: '#/components/parameters/AppStoreId'
       responses:
         '200':
           $ref: '#/components/responses/InAppPurchaseOffersResponse'
@@ -227,6 +264,11 @@ paths:
       summary: Fetch info
       description: Retrieve company and developer information including contact details and social media profiles
       operationId: getInfo
+      parameters:
+        - $ref: '#/components/parameters/AppVersion'
+        - $ref: '#/components/parameters/BundleId'
+        - $ref: '#/components/parameters/AcceptLanguage'
+        - $ref: '#/components/parameters/AppStoreId'
       responses:
         '200':
           $ref: '#/components/responses/InfoResponse'
@@ -265,13 +307,13 @@ paths:
 components:
   parameters:
     AppVersion:
-      name: X-App-Version
+      name: App-Version
       in: header
+      required: false
       description: Client application version
       schema:
         type: string
         example: 1.2.3
-      required: true
     AppId:
       name: id
       in: path
@@ -320,6 +362,30 @@ components:
           - paywall
           - onboarding
         example: paywall
+    BundleId:
+      name: App-Bundle-ID
+      in: header
+      required: false
+      description: Bundle identifier in reverse domain notation
+      schema:
+        type: string
+        example: com.oversize.App
+    AcceptLanguage:
+      name: Accept-Language
+      in: header
+      required: false
+      description: Preferred language for response content
+      schema:
+        type: string
+        example: en-US
+    AppStoreId:
+      name: App-Store-ID
+      in: header
+      required: false
+      description: Apple App Store application identifier
+      schema:
+        type: string
+        example: '1234567890'
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

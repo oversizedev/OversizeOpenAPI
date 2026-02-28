@@ -7,4 +7,5 @@ schema:
   enum:
     - paywall
     - onboarding
+    - showcase
   example: paywall

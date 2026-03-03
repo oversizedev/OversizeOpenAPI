@@ -1,0 +1,24 @@
+get:
+  operationId: getAppUpdate
+  summary: Retrieve application version details
+  description: Get details for a specific version of an application
+  tags:
+    - apps
+  parameters:
+    - $ref: '../../components/parameters/AppId.yaml'
+    - $ref: '../../components/parameters/Version.yaml'
+    - $ref: '../../components/parameters/AppVersion.yaml'
+    - $ref: '../../components/parameters/BundleId.yaml'
+    - $ref: '../../components/parameters/AcceptLanguage.yaml'
+    - $ref: '../../components/parameters/AppStoreId.yaml'
+  responses:
+    '200':
+      $ref: '../../components/responses/update/VersionResponse.yaml'
+    '400':
+      $ref: '../../components/responses/error/BadRequestResponse.yaml'
+    '401':
+      $ref: '../../components/responses/error/UnauthorizedResponse.yaml'
+    '404':
+      $ref: '../../components/responses/error/NotFoundResponse.yaml'
+    '500':
+      $ref: '../../components/responses/error/InternalServerErrorResponse.yaml'

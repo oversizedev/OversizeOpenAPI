@@ -1,0 +1,7 @@
+name: version
+in: path
+required: true
+description: Application version identifier (semver)
+schema:
+  type: string
+  example: "2.1.0"

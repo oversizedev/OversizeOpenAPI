@@ -1,0 +1,22 @@
+description: Application version details
+content:
+  application/json:
+    schema:
+      type: object
+      description: Application version details
+      required:
+        - version
+      properties:
+        version:
+          $ref: '../../schemas/update/Version.yaml'
+          description: Single version details
+      example:
+        version:
+          version: "2.1.0"
+          whatsNew: "Performance improvements and bug fixes"
+          features:
+            - id: "1"
+              title: "No Ads"
+              textSize: "medium"
+              textAlignment: "center"
+              screenshots: []

@@ -1,0 +1,27 @@
+description: List of application versions
+content:
+  application/json:
+    schema:
+      type: object
+      description: List of application versions
+      required:
+        - versions
+      properties:
+        versions:
+          type: array
+          description: Collection of application versions
+          items:
+            $ref: '../../schemas/update/Version.yaml'
+      example:
+        versions:
+          - version: "2.1.0"
+            whatsNew: "Performance improvements and bug fixes"
+            features:
+              - id: "1"
+                title: "No Ads"
+                textSize: "medium"
+                textAlignment: "center"
+                screenshots: []
+          - version: "2.0.0"
+            whatsNew: "Major redesign with new features"
+            features: []

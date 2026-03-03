@@ -1,0 +1,18 @@
+type: object
+required:
+  - version
+  - features
+properties:
+  version:
+    type: string
+    description: Version identifier (semver)
+    example: "2.1.0"
+  whatsNew:
+    type: string
+    description: Summary of changes in this version
+    example: "Performance improvements and bug fixes"
+  features:
+    type: array
+    description: Features introduced or updated in this version
+    items:
+      $ref: '../feature/Feature.yaml'

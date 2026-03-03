@@ -186,6 +186,55 @@ paths:
           $ref: '#/components/responses/NotFoundResponse'
         '500':
           $ref: '#/components/responses/InternalServerErrorResponse'
+  /v1/apps/{id}/updates:
+    get:
+      operationId: getAppUpdates
+      summary: Retrieve application update history
+      description: Get all version updates associated with a specific application
+      tags:
+        - apps
+      parameters:
+        - $ref: '#/components/parameters/AppId'
+        - $ref: '#/components/parameters/AppVersion'
+        - $ref: '#/components/parameters/BundleId'
+        - $ref: '#/components/parameters/AcceptLanguage'
+        - $ref: '#/components/parameters/AppStoreId'
+      responses:
+        '200':
+          $ref: '#/components/responses/VersionsResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+  /v1/apps/{id}/updates/{version}:
+    get:
+      operationId: getAppUpdate
+      summary: Retrieve application version details
+      description: Get details for a specific version of an application
+      tags:
+        - apps
+      parameters:
+        - $ref: '#/components/parameters/AppId'
+        - $ref: '#/components/parameters/VersionId'
+        - $ref: '#/components/parameters/AppVersion'
+        - $ref: '#/components/parameters/BundleId'
+        - $ref: '#/components/parameters/AcceptLanguage'
+        - $ref: '#/components/parameters/AppStoreId'
+      responses:
+        '200':
+          $ref: '#/components/responses/VersionResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
   /v1/apps/{id}/in-app-purchases:
     get:
       operationId: getInAppPurchases
@@ -387,6 +436,14 @@ components:
       schema:
         type: string
         example: '1234567890'
+    VersionId:
+      name: version
+      in: path
+      required: true
+      description: Application version identifier (semver)
+      schema:
+        type: string
+        example: 2.1.0
   securitySchemes:
     ApiKeyAuth:
       type: apiKey
@@ -657,6 +714,25 @@ components:
         priority:
           type: integer
           example: 1
+    Version:
+      type: object
+      required:
+        - version
+        - features
+      properties:
+        version:
+          type: string
+          description: Version identifier (semver)
+          example: 2.1.0
+        whatsNew:
+          type: string
+          description: Summary of changes in this version
+          example: Performance improvements and bug fixes
+        features:
+          type: array
+          description: Features introduced or updated in this version
+          items:
+            $ref: '#/components/schemas/Feature'
     InAppPurchaseBanner:
       type: object
       required:
@@ -1028,6 +1104,57 @@ components:
                 description: Don't be afraid for your secrets to be exposed
                 iconUrl: https://cdn.oversize.design/assets/apps/secretphoto/icon.png
                 priority: 1
+    VersionsResponse:
+      description: List of application versions
+      content:
+        application/json:
+          schema:
+            type: object
+            description: List of application versions
+            required:
+              - versions
+            properties:
+              versions:
+                type: array
+                description: Collection of application versions
+                items:
+                  $ref: '#/components/schemas/Version'
+            example:
+              versions:
+                - version: 2.1.0
+                  whatsNew: Performance improvements and bug fixes
+                  features:
+                    - id: '1'
+                      title: No Ads
+                      textSize: medium
+                      textAlignment: center
+                      screenshots: []
+                - version: 2.0.0
+                  whatsNew: Major redesign with new features
+                  features: []
+    VersionResponse:
+      description: Application version details
+      content:
+        application/json:
+          schema:
+            type: object
+            description: Application version details
+            required:
+              - version
+            properties:
+              version:
+                $ref: '#/components/schemas/Version'
+                description: Single version details
+            example:
+              version:
+                version: 2.1.0
+                whatsNew: Performance improvements and bug fixes
+                features:
+                  - id: '1'
+                    title: No Ads
+                    textSize: medium
+                    textAlignment: center
+                    screenshots: []
     InAppPurchaseResponse:
       description: Response containing in-app purchase product IDs and banner information
       content:

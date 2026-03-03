@@ -1,0 +1,23 @@
+get:
+  operationId: getAppUpdates
+  summary: Retrieve application update history
+  description: Get all version updates associated with a specific application
+  tags:
+    - apps
+  parameters:
+    - $ref: '../../components/parameters/AppId.yaml'
+    - $ref: '../../components/parameters/AppVersion.yaml'
+    - $ref: '../../components/parameters/BundleId.yaml'
+    - $ref: '../../components/parameters/AcceptLanguage.yaml'
+    - $ref: '../../components/parameters/AppStoreId.yaml'
+  responses:
+    '200':
+      $ref: '../../components/responses/update/VersionsResponse.yaml'
+    '400':
+      $ref: '../../components/responses/error/BadRequestResponse.yaml'
+    '401':
+      $ref: '../../components/responses/error/UnauthorizedResponse.yaml'
+    '404':
+      $ref: '../../components/responses/error/NotFoundResponse.yaml'
+    '500':
+      $ref: '../../components/responses/error/InternalServerErrorResponse.yaml'

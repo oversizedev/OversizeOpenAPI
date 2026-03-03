@@ -44,6 +44,10 @@ paths:
     $ref: './paths/apps/getAppAds.yaml'
   /v1/apps/{id}/ad:
     $ref: './paths/apps/getAppAd.yaml'
+  /v1/apps/{id}/updates:
+    $ref: './paths/apps/getAppUpdates.yaml'
+  /v1/apps/{id}/updates/{version}:
+    $ref: './paths/apps/getAppUpdate.yaml'
   /v1/apps/{id}/in-app-purchases:
     $ref: "./paths/apps/getInAppPurchases.yaml"
   /v1/features/{id}:
@@ -74,6 +78,8 @@ components:
       $ref: './components/parameters/AcceptLanguage.yaml'
     AppStoreId:
       $ref: './components/parameters/AppStoreId.yaml'
+    Version:
+      $ref: './components/parameters/Version.yaml'
   securitySchemes:
     ApiKeyAuth:
       $ref: './components/securitySchemes/ApiKeyAuth.yaml'

@@ -4,14 +4,17 @@ parameters:
   - $ref: '../../components/parameters/AcceptLanguage.yaml'
   - $ref: '../../components/parameters/AppStoreId.yaml'
 get:
-  operationId: getInAppPurchaseOffers
-  summary: Get all sale offers
-  description: Retrieve StoreKit offers
+  operationId: getAppUpdate
+  summary: Retrieve application version details
+  description: Get details for a specific version of an application
   tags:
-    - in-app-purchases
+    - apps
+  parameters:
+    - $ref: '../../components/parameters/AppId.yaml'
+    - $ref: '../../components/parameters/Version.yaml'
   responses:
     '200':
-      $ref: '../../components/responses/in-app-purchase/InAppPurchaseOffersResponse.yaml'
+      $ref: '../../components/responses/update/VersionResponse.yaml'
     '400':
       $ref: '../../components/responses/error/BadRequestResponse.yaml'
     '401':

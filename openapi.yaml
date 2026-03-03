@@ -44,6 +44,10 @@ paths:
     $ref: './paths/apps/getAppAds.yaml'
   /v1/apps/{id}/ad:
     $ref: './paths/apps/getAppAd.yaml'
+  /v1/apps/{id}/updates:
+    $ref: './paths/apps/getAppUpdates.yaml'
+  /v1/apps/{id}/updates/{version}:
+    $ref: './paths/apps/getAppUpdate.yaml'
   /v1/apps/{id}/in-app-purchases:
     $ref: "./paths/apps/getInAppPurchases.yaml"
   /v1/features/{id}:
@@ -69,11 +73,13 @@ components:
     FeatureContext:
       $ref: './components/parameters/FeatureContext.yaml'
     BundleId:
-      $ref: './components/parameters/BundleId.yaml'
+      $ref: './components/parameters/AppBundleId.yaml'
     AcceptLanguage:
       $ref: './components/parameters/AcceptLanguage.yaml'
     AppStoreId:
       $ref: './components/parameters/AppStoreId.yaml'
+    Version:
+      $ref: './components/parameters/Version.yaml'
   securitySchemes:
     ApiKeyAuth:
       $ref: './components/securitySchemes/ApiKeyAuth.yaml'

@@ -1,3 +1,8 @@
+parameters:
+  - $ref: '../../components/parameters/AppVersion.yaml'
+  - $ref: '../../components/parameters/AppBundleId.yaml'
+  - $ref: '../../components/parameters/AcceptLanguage.yaml'
+  - $ref: '../../components/parameters/AppStoreId.yaml'
 get:
   operationId: getAppUpdate
   summary: Retrieve application version details
@@ -7,10 +12,6 @@ get:
   parameters:
     - $ref: '../../components/parameters/AppId.yaml'
     - $ref: '../../components/parameters/Version.yaml'
-    - $ref: '../../components/parameters/AppVersion.yaml'
-    - $ref: '../../components/parameters/BundleId.yaml'
-    - $ref: '../../components/parameters/AcceptLanguage.yaml'
-    - $ref: '../../components/parameters/AppStoreId.yaml'
   responses:
     '200':
       $ref: '../../components/responses/update/VersionResponse.yaml'

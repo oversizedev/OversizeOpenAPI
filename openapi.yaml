@@ -73,7 +73,7 @@ components:
     FeatureContext:
       $ref: './components/parameters/FeatureContext.yaml'
     BundleId:
-      $ref: './components/parameters/BundleId.yaml'
+      $ref: './components/parameters/AppBundleId.yaml'
     AcceptLanguage:
       $ref: './components/parameters/AcceptLanguage.yaml'
     AppStoreId:

@@ -72,7 +72,7 @@ components:
       $ref: './components/parameters/AppStatus.yaml'
     FeatureContext:
       $ref: './components/parameters/FeatureContext.yaml'
-    BundleId:
+    AppBundleId:
       $ref: './components/parameters/AppBundleId.yaml'
     AcceptLanguage:
       $ref: './components/parameters/AcceptLanguage.yaml'

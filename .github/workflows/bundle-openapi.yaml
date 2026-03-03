@@ -223,8 +223,8 @@ jobs:
             --head $BRANCH_NAME \
             --label open-api
 
-  create-network-pr:
-    name: Create Network PR
+  create-apps-pr:
+    name: Create Apps PR
     needs:
       - bundle
       - bump-version
@@ -242,7 +242,7 @@ jobs:
       - name: Checkout Target Repository
         uses: actions/checkout@v4
         with:
-          repository: oversizedev/OversizeNetwork
+          repository: oversizedev/OversizeApps
           token: ${{ secrets.ACTIONS_TOKEN }}
           path: target_repo
           fetch-depth: 1
@@ -259,18 +259,42 @@ jobs:
           cd target_repo
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          
+
       - name: Create and Switch to Feature Branch
         run: |
           cd target_repo
           BRANCH_NAME="openapi/spec-${{ needs.bump-version.outputs.new_version }}"
           git checkout -b $BRANCH_NAME
-          
-      - name: Copy Updated Files
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install OpenAPI Generator CLI
+        run: npm install -g @openapitools/openapi-generator-cli
+        env:
+          OPENAPI_GENERATOR_VERSION: 7.7.0
+
+      - name: Generate TypeScript Client
         run: |
-          cp -v bundle/openapi.yaml target_repo/Sources/OversizeNetwork/
-          cd target_repo
-          
+          openapi-generator-cli generate \
+            -i bundle/openapi.yaml \
+            -g typescript-fetch \
+            -o target_repo/src/api
+        env:
+          OPENAPI_GENERATOR_VERSION: 7.7.0
+
+      - name: Run Post-Process Script
+        working-directory: target_repo
+        run: node post-process-api.js
+
       - name: Check for Changes
         id: check-changes
         run: |
@@ -298,7 +322,7 @@ jobs:
           cd target_repo
           BRANCH_NAME="openapi/spec-${{ needs.bump-version.outputs.new_version }}"
           gh pr create \
-            --repo oversizedev/OversizeNetwork \
+            --repo oversizedev/OversizeApps \
             --title "Update OpenAPI specification to ${{ needs.bump-version.outputs.new_version }}" \
             --body "Automated update from ${{ github.repository }}. Changes include ${{ needs.bump-version.outputs.new_version }} OpenAPI specification updates" \
             --base main \
@@ -328,7 +352,7 @@ jobs:
           token: ${{ secrets.ACTIONS_TOKEN }}
           path: target_repo
           fetch-depth: 1
-          ref: dev
+          ref: main
 
       - name: Download bundle artifact
         uses: actions/download-artifact@v4
@@ -407,7 +431,7 @@ jobs:
             --repo oversizedev/OversizeApps \
             --title "Update OpenAPI specification to ${{ needs.bump-version.outputs.new_version }}" \
             --body "Automated update from ${{ github.repository }}. Changes include ${{ needs.bump-version.outputs.new_version }} OpenAPI specification updates" \
-            --base dev \
+            --base main \
             --head $BRANCH_NAME \
             --label open-api
 

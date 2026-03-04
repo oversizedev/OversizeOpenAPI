@@ -7,7 +7,7 @@ required:
 properties:
   id:
     type: integer
-    example: 01
+    example: 1
   badge:
     type: string
     example: Special Offer

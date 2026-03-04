@@ -14,7 +14,9 @@ content:
             $ref: '../../schemas/update/Version.yaml'
       example:
         versions:
-          - version: "2.1.0"
+          - id: 6443709281
+            version: "2.1.0"
+            releasedAt: "2022-12-31"
             whatsNew: "Performance improvements and bug fixes"
             features:
               - id: "1"
@@ -22,6 +24,8 @@ content:
                 textSize: "medium"
                 textAlignment: "center"
                 screenshots: []
-          - version: "2.0.0"
+          - id: 6443709280
+            version: "2.0.0"
+            releasedAt: "2022-06-01"
             whatsNew: "Major redesign with new features"
             features: []

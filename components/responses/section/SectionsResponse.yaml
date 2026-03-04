@@ -28,6 +28,7 @@ content:
           features: []
         sections:
           - id: "premium"
+            type: "grid"
             title: "Premium Features"
             subtitle: "Unlock all features"
             features:
@@ -35,3 +36,4 @@ content:
                 title: "No Ads"
                 textSize: "medium"
                 textAlignment: "center"
+                screenshots: []

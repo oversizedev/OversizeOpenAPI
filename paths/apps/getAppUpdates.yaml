@@ -11,6 +11,7 @@ get:
     - apps
   parameters:
     - $ref: '../../components/parameters/AppId.yaml'
+    - $ref: '../../components/parameters/Platforms.yaml'
   responses:
     '200':
       $ref: '../../components/responses/update/VersionsResponse.yaml'

@@ -19,5 +19,7 @@ content:
           - "premium_monthly"
           - "premium_lifetime"
         banner:
+          id: 1
+          badge: "Special Offer"
           title: "Unlock Premium Features"
-          subtitle: "Get full access to all features"
+          description: "Get full access to all features"

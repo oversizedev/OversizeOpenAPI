@@ -7,7 +7,7 @@ required:
 properties:
   id:
     type: string
-    example: 0
+    example: "0"
   type:
     type: string
     example: grid

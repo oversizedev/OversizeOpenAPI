@@ -12,7 +12,9 @@ content:
           description: Single version details
       example:
         version:
+          id: 6443709281
           version: "2.1.0"
+          releasedAt: "2022-12-31T00:00:00Z"
           whatsNew: "Performance improvements and bug fixes"
           features:
             - id: "1"

@@ -1,12 +1,20 @@
 type: object
 required:
+  - id
   - version
-  - features
+  - releasedAt
 properties:
+  id:
+    type: integer
+    example: 1
   version:
     type: string
     description: Version identifier (semver)
     example: "2.1.0"
+  releasedAt:
+    type: string
+    format: date-time
+    example: "2025-08-15T10:30:00Z"
   whatsNew:
     type: string
     description: Summary of changes in this version

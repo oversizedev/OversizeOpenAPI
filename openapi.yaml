@@ -80,6 +80,8 @@ components:
       $ref: './components/parameters/AppStoreId.yaml'
     Version:
       $ref: './components/parameters/Version.yaml'
+    Placement:
+      $ref: './components/parameters/Placement.yaml'
   securitySchemes:
     ApiKeyAuth:
       $ref: './components/securitySchemes/ApiKeyAuth.yaml'

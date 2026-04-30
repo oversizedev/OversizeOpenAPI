@@ -12,6 +12,7 @@ get:
   parameters:
     - $ref: '../../components/parameters/AppId.yaml'
     - $ref: '../../components/parameters/Platforms.yaml'
+    - $ref: '../../components/parameters/Placement.yaml'
   responses:
     '200':
       $ref: '../../components/responses/ad/AdResponse.yaml'

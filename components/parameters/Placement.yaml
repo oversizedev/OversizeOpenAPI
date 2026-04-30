@@ -1,0 +1,7 @@
+name: placement
+in: query
+required: false
+description: Banner placement identifier
+schema:
+  type: string
+  example: "list-top"
